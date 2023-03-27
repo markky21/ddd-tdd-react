@@ -1,5 +1,15 @@
 import { ValueObject } from "../../../shared/core/value-objects/value-object.abstract";
 import { Guard } from "../../../shared/core/utils/guard";
+import Fraction from "fraction.js";
+
+export interface CoinsAndNotes {
+  oneCentCount: number;
+  tenCentCount: number;
+  quarterCentCount: number;
+  oneDollarCount: number;
+  fiveDollarCount: number;
+  tenDollarCount: number;
+}
 
 export class Money extends ValueObject<Money> {
   constructor(
@@ -12,30 +22,6 @@ export class Money extends ValueObject<Money> {
   ) {
     super();
   }
-
-  // get oneCentCount(): number {
-  //   return this._oneCentCount;
-  // }
-  //
-  // get tenCentCount(): number {
-  //   return this._tenCentCount;
-  // }
-  //
-  // get quarterCentCount(): number {
-  //   return this._quarterCentCount;
-  // }
-  //
-  // get oneDollarCount(): number {
-  //   return this._oneDollarCount;
-  // }
-  //
-  // get fiveDollarCount(): number {
-  //   return this._fiveDollarCount;
-  // }
-  //
-  // get tenDollarCount(): number {
-  //   return this._tenDollarCount;
-  // }
 
   add(addend: Money): Money {
     // @ts-ignore
@@ -52,14 +38,14 @@ export class Money extends ValueObject<Money> {
   }
 
   getTotalAmount(): number {
-    return (
-      this._oneCentCount * 0.01 +
-      this._tenCentCount * 0.1 +
-      this._quarterCentCount * 0.25 +
-      this._oneDollarCount * 1 +
-      this._fiveDollarCount * 5 +
-      this._tenDollarCount * 10
-    );
+    return new Fraction(this._oneCentCount)
+      .mul(0.01)
+      .add(new Fraction(this._tenCentCount).mul(0.1))
+      .add(new Fraction(this._quarterCentCount).mul(0.25))
+      .add(new Fraction(this._oneDollarCount).mul(1))
+      .add(new Fraction(this._fiveDollarCount).mul(5))
+      .add(new Fraction(this._tenDollarCount).mul(10))
+      .valueOf();
   }
 
   subtraction(money: Money): Money {
@@ -96,6 +82,34 @@ export class Money extends ValueObject<Money> {
       this._fiveDollarCount - money._fiveDollarCount,
       this._tenDollarCount - money._tenDollarCount
     );
+  }
+
+  toView(): string {
+    const totalAmount = this.getTotalAmount();
+    if (totalAmount === 0) {
+      return "¢0";
+    }
+    if (totalAmount < 1) {
+      return `¢${totalAmount * 100}`;
+    }
+    if (totalAmount % 1 === 0) {
+      return `$${totalAmount}.00`;
+    }
+    if ((totalAmount * 10) % 1 === 0) {
+      return `$${totalAmount}0`;
+    }
+    return `$${totalAmount}`;
+  }
+
+  getCoinsAndNotes(): CoinsAndNotes {
+    return {
+      oneCentCount: this._oneCentCount,
+      tenCentCount: this._tenCentCount,
+      quarterCentCount: this._quarterCentCount,
+      oneDollarCount: this._oneDollarCount,
+      fiveDollarCount: this._fiveDollarCount,
+      tenDollarCount: this._tenDollarCount,
+    };
   }
 
   static None(): Money {
