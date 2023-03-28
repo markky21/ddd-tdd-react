@@ -30,14 +30,17 @@ export function SnackMachineInterface({
           <Button
             className="w-full"
             onClick={() => serviceRef.current.buySnack()}
+            data-testid="buttonBuySnack"
           >
             Buy a snack
           </Button>
         </div>
 
-        <h3 className="text-center">Money inserted: {moneyInserted}</h3>
+        <h3 className="text-center" data-testid="insertedMoney">
+          Money inserted: {moneyInserted}
+        </h3>
 
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 gap-3" data-testid="insertMoney">
           <Button onClick={() => serviceRef.current.insertOneCent()}>
             Put ¢1
           </Button>
@@ -62,14 +65,17 @@ export function SnackMachineInterface({
           <Button
             className="w-full"
             onClick={() => serviceRef.current.returnMoney()}
+            data-testid="buttonReturnMoney"
           >
             Return money
           </Button>
         </div>
 
-        <div className="h-6 text-center">{message}</div>
+        <div className="h-6 text-center" data-testid="message">
+          {message}
+        </div>
 
-        <div className="flex flex-col">
+        <div className="flex flex-col" data-testid="moneyInside">
           <h3 className="text-center">Money inside: </h3>
           <div>¢1: {coinsAndNotes?.oneCentCount}</div>
           <div>¢10: {coinsAndNotes?.tenCentCount}</div>
