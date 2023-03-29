@@ -1,8 +1,8 @@
-import { Money } from "../../model/snack-machine/core/value-objects/money";
-import { SnackMachine } from "../../model/snack-machine/core/entities/snack-machine";
+import { Money } from "../../core/value-objects/money";
 import { BehaviorSubject, combineLatest, map, ReplaySubject } from "rxjs";
+import { SnackMachineWithPersistence } from "../../core/entities/snack-machine-with-persistence";
 
-export class SnackMachineInterfaceService {
+export class SnackMachineController {
   private readonly _moneyInserted$ = new ReplaySubject<Money>();
   private readonly _moneyInMachine$ = new ReplaySubject<Money>();
 
@@ -20,7 +20,7 @@ export class SnackMachineInterfaceService {
     )
   );
 
-  constructor(private readonly snackMachine: SnackMachine) {
+  constructor(private readonly snackMachine: SnackMachineWithPersistence) {
     this._moneyInserted$.next(this.snackMachine.moneyInTransaction);
     this._moneyInMachine$.next(this.snackMachine.moneyInMachine);
   }
@@ -44,8 +44,8 @@ export class SnackMachineInterfaceService {
     this.insertMoney(Money.TenDollar());
   }
 
-  public buySnack(): void {
-    this.snackMachine.buySnack();
+  public async buySnack(): Promise<void> {
+    await this.snackMachine.buySnack();
     this._moneyInserted$.next(this.snackMachine.moneyInTransaction);
     this._moneyInMachine$.next(this.snackMachine.moneyInMachine);
     this.message$.next(`You have bought a snack`);
@@ -57,9 +57,9 @@ export class SnackMachineInterfaceService {
     this.message$.next("Money returned");
   }
 
-  private insertMoney(money: Money): void {
-    this.snackMachine.insertMoney(money);
+  private insertMoney(coinOrNode: Money): void {
+    this.snackMachine.insertMoney(coinOrNode);
     this._moneyInserted$.next(this.snackMachine.moneyInTransaction);
-    this.message$.next(`You inserted ${money.toView()}`);
+    this.message$.next(`You inserted ${coinOrNode.toView()}`);
   }
 }

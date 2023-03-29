@@ -1,16 +1,22 @@
 import { Money } from "../value-objects/money";
-import { Entity } from "../../../shared/core/entities/entity.abstract";
+import {
+  Entity,
+  EntityId,
+} from "../../../shared/core/entities/entity.abstract";
 import { Guard } from "../../../shared/core/utils/guard";
 
-export class SnackMachine extends Entity<number> {
+export class SnackMachine extends Entity {
   private _moneyInTransaction: Money = Money.None();
-  private _moneyInMachine: Money = Money.None();
 
   get moneyInTransaction() {
     return this._moneyInTransaction;
   }
   get moneyInMachine() {
     return this._moneyInMachine;
+  }
+
+  constructor(id: EntityId, protected _moneyInMachine: Money = Money.None()) {
+    super(id);
   }
 
   insertMoney(amount: Money): void {
