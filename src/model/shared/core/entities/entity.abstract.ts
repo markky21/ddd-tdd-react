@@ -1,10 +1,6 @@
 export type EntityId = string | number | undefined;
 export abstract class Entity {
-  constructor(private readonly _id: EntityId) {}
-
-  get id(): EntityId {
-    return this._id;
-  }
+  constructor(public readonly id: EntityId) {}
 
   equals(entity: Entity): boolean {
     if (entity.constructor !== this.constructor) return false;

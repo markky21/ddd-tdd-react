@@ -1,7 +1,8 @@
-import { IdbService } from "../../data-access/idb.service";
+import { IdbService } from "../../../data-access/idb.service";
 import { SnackMachine } from "./snack-machine";
-import { Money } from "../value-objects/money";
-import { EntityId } from "../../../shared/core/entities/entity.abstract";
+import { Money } from "../../value-objects/money";
+import { EntityId } from "../../../../shared/core/entities/entity.abstract";
+import { SnackMachineSlotsPosition } from "./entities/slot";
 
 export class SnackMachineWithPersistence extends SnackMachine {
   constructor(id: EntityId, private db: IdbService) {
@@ -20,14 +21,16 @@ export class SnackMachineWithPersistence extends SnackMachine {
         moneyInMachine.tenDollarCount
       );
     } else {
-      await this.db.putSnackMachine(this.moneyInMachine.getCoinsAndNotes());
+      await this.db.putSnackMachine(
+        this.getMoneyInMachine().getCoinsAndNotes()
+      );
     }
   }
 
-  async buySnack(): Promise<void> {
-    super.buySnack();
+  async buySnack(position: SnackMachineSlotsPosition): Promise<void> {
+    super.buySnack(position);
     await this.db.putSnackMachine(
-      this.moneyInMachine.getCoinsAndNotes(),
+      this.getMoneyInMachine().getCoinsAndNotes(),
       this.id as string
     );
   }

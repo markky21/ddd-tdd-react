@@ -1,9 +1,16 @@
 import "fake-indexeddb/auto";
 import { describe, it, expect } from "vitest";
 import { SnackMachineWithPersistence } from "./snack-machine-with-persistence";
-import { IdbService } from "../../data-access/idb.service";
-import { Money } from "../value-objects/money";
-import { getTestDb } from "../../data-access/idb.service.testing";
+import { IdbService } from "../../../data-access/idb.service";
+import { Money } from "../../value-objects/money";
+import { getTestDb } from "../../../data-access/idb.service.testing";
+import { Snack } from "../snack/snack";
+import { SnackPile } from "./value-objects/snack-pile";
+
+const getSnackPile = () => {
+  const snack = new Snack("Snickers");
+  return new SnackPile(snack, 1, 10);
+};
 
 const getSUT = async (): Promise<{
   snackMachine: SnackMachineWithPersistence;
@@ -25,16 +32,17 @@ describe(SnackMachineWithPersistence.name, () => {
   it("should load money from store", async () => {
     const { snackMachine } = await getSUT();
 
-    expect(snackMachine.moneyInMachine).toEqual(Money.FiveDollar());
+    expect(snackMachine.getMoneyInMachine()).toEqual(Money.FiveDollar());
   });
 
   it("buy snack should store money in machine", async () => {
     const { snackMachine, db, snackMachineId } = await getSUT();
 
     snackMachine.insertMoney(Money.Dollar());
-    await snackMachine.buySnack();
+    snackMachine.loadSnacks(0, getSnackPile());
+    await snackMachine.buySnack(0);
 
-    expect(snackMachine.moneyInMachine).toEqual(
+    expect(snackMachine.getMoneyInMachine()).toEqual(
       Money.FiveDollar().add(Money.Dollar())
     );
     await expect(db.getSnackMachine(snackMachineId)).resolves.toEqual(

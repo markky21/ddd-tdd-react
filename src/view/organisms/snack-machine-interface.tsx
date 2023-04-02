@@ -19,10 +19,24 @@ export function SnackMachineInterface({
         <div>
           <Button
             className="w-full"
-            onClick={() => snackMachine.buySnack()}
-            data-testid="buttonBuySnack"
+            onClick={() => snackMachine.buySnack(0)}
+            data-testid="buttonBuySnack0"
           >
-            Buy a snack
+            Buy a snack 1
+          </Button>
+          <Button
+            className="w-full"
+            onClick={() => snackMachine.buySnack(1)}
+            data-testid="buttonBuySnack1"
+          >
+            Buy a snack 2
+          </Button>
+          <Button
+            className="w-full"
+            onClick={() => snackMachine.buySnack(2)}
+            data-testid="buttonBuySnack2"
+          >
+            Buy a snack 3
           </Button>
         </div>
 

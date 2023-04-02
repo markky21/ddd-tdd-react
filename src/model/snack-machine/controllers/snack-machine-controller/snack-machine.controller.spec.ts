@@ -2,13 +2,20 @@ import "fake-indexeddb/auto";
 import { SnackMachineController } from "./snack-machine.controller";
 import { describe, expect, it, vi } from "vitest";
 import { Money } from "../../core/value-objects/money";
-import { SnackMachineWithPersistence } from "../../core/entities/snack-machine-with-persistence";
+import { SnackMachineWithPersistence } from "../../core/aggregates/snack-machine/snack-machine-with-persistence";
 import { getTestDb } from "../../data-access/idb.service.testing";
+import { nanoid } from "nanoid";
+import { Snack } from "../../core/aggregates/snack/snack";
+import { SnackPile } from "../../core/aggregates/snack-machine/value-objects/snack-pile";
 
 const getSUT = async (): Promise<SnackMachineController> => {
   const db = await getTestDb();
-  const snackMachine = new SnackMachineWithPersistence(1, db);
+  const snackMachine = new SnackMachineWithPersistence(nanoid(), db);
   await snackMachine.load();
+
+  const snack = new Snack("Snickers");
+  snackMachine.loadSnacks(0, new SnackPile(snack, 1, 10));
+
   return new SnackMachineController(snackMachine);
 };
 
@@ -162,11 +169,11 @@ describe(SnackMachineController.name, () => {
       const sut = await getSUT();
 
       const subscription = sut.moneyInserted$.subscribe(spy);
-      sut.insertOneCent();
-      await sut.buySnack();
+      sut.insertDollar();
+      await sut.buySnack(0);
       subscription.unsubscribe();
 
-      expect(spy).toHaveBeenNthCalledWith(2, "¢1");
+      expect(spy).toHaveBeenNthCalledWith(2, "$1.00");
       expect(spy).toHaveBeenNthCalledWith(3, "¢0");
     });
 
@@ -175,8 +182,8 @@ describe(SnackMachineController.name, () => {
       const sut = await getSUT();
 
       const subscription = sut.message$.subscribe(spy);
-      sut.insertOneCent();
-      await sut.buySnack();
+      sut.insertDollar();
+      await sut.buySnack(0);
       subscription.unsubscribe();
 
       expect(spy).toHaveBeenNthCalledWith(3, "You have bought a snack");
@@ -187,14 +194,16 @@ describe(SnackMachineController.name, () => {
       const sut = await getSUT();
 
       const subscription = sut.coinsAndNotes$.subscribe(spy);
-      sut.insertOneCent();
-      await sut.buySnack();
-      sut.insertTenCent();
-      await sut.buySnack();
+      sut.insertDollar();
+      await sut.buySnack(0);
+      sut.insertFiveDollar();
+      await sut.buySnack(0);
 
       subscription.unsubscribe();
 
-      expect(spy).toHaveBeenLastCalledWith(new Money(1, 1).getCoinsAndNotes());
+      expect(spy).toHaveBeenLastCalledWith(
+        new Money(0, 0, 0, 1, 1).getCoinsAndNotes()
+      );
     });
   });
 });

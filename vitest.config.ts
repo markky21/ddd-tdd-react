@@ -10,6 +10,6 @@ export default defineConfig({
       // ...
     ],
     globals: true,
-    setupFiles: "./tests/setup.js",
+    setupFiles: "./setupTests.ts",
   },
 });

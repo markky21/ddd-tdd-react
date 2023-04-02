@@ -7,7 +7,16 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": ["unicorn"],
+  "plugins": ["unicorn", "testing-library"],
+  "overrides": [
+    {
+      "files": [
+        "**/__tests__/**/*.[jt]s?(x)",
+        "**/?(*.)+(spec|test).[jt]s?(x)"
+      ],
+      "extends": ["plugin:testing-library/react", "plugin:jest-dom/recommended"]
+    }
+  ],
   "rules": {
     "no-console": "error",
     "unicorn/better-regex": "error",

@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { Entity } from "./entity.abstract";
 
-class SimpleEntity extends Entity<number> {}
-class OtherEntity extends Entity<number> {}
+class SimpleEntity extends Entity {}
+class OtherEntity extends Entity {}
 
 describe("Entity", () => {
   it("Entity instance should have an id", () => {
