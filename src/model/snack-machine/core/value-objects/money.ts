@@ -21,6 +21,21 @@ export class Money extends ValueObject<Money> {
     private readonly _tenDollarCount: number = 0
   ) {
     super();
+    Guard.againstNegativeNumber(_oneCentCount, "One cent count is negative");
+    Guard.againstNegativeNumber(_tenCentCount, "Ten cent count is negative");
+    Guard.againstNegativeNumber(_quarterCentCount, "Quarter count is negative");
+    Guard.againstNegativeNumber(
+      _oneDollarCount,
+      "One dollar count is negative"
+    );
+    Guard.againstNegativeNumber(
+      _fiveDollarCount,
+      "Five dollars count is negative"
+    );
+    Guard.againstNegativeNumber(
+      _tenDollarCount,
+      "Ten dollars count is negative"
+    );
   }
 
   add(addend: Money): Money {

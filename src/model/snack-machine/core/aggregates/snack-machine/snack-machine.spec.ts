@@ -46,4 +46,48 @@ describe(SnackMachine.name, () => {
     expect(snackMachine.getMoneyInMachine()).toEqual(Money.Dollar());
     expect(snackMachine.getSnackPile(0).quantity).toEqual(9);
   });
+
+  it("should NOT be able to buy a snack if the slot is empty", () => {
+    const snackMachine = getSnackMachine();
+    snackMachine.insertMoney(Money.Dollar());
+
+    expect(() => snackMachine.buySnack(0)).toThrowError(
+      "There is no snack in the slot"
+    );
+  });
+
+  it("should NOT be able to buy a snack if there is less money in the machine than Snack price", () => {
+    const snackMachine = getSnackMachine();
+    snackMachine.loadSnacks(0, new SnackPile(new Snack("Snickers"), 1, 10));
+    snackMachine.insertMoney(Money.TenCent());
+
+    expect(() => snackMachine.buySnack(0)).toThrowError(
+      "Not enough money to buy the snack"
+    );
+  });
+
+  it.skip("should return money with the highest value coins possible", () => {
+    const snackMachine = getSnackMachine();
+    snackMachine.loadSnacks(0, new SnackPile(new Snack("Snickers"), 1, 10));
+    snackMachine.insertMoney(Money.Dollar());
+
+    snackMachine.insertMoney(Money.Quarter());
+    snackMachine.insertMoney(Money.Quarter());
+    snackMachine.insertMoney(Money.Quarter());
+    snackMachine.insertMoney(Money.Quarter());
+    snackMachine.returnMoney();
+
+    expect(
+      snackMachine.getMoneyInMachine().getCoinsAndNotes().quarterCentCount
+    ).toEqual(4);
+    expect(
+      snackMachine.getMoneyInMachine().getCoinsAndNotes().oneDollarCount
+    ).toEqual(0);
+  });
+
+  it.todo(
+    "should NOT be able to buy a snack if there is NO possibility to return change",
+    () => {}
+  );
+  it.todo("should return change when buy a snack", () => {});
 });

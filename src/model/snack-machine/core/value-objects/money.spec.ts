@@ -2,9 +2,17 @@ import { describe, it, expect } from "vitest";
 import { Money } from "./money";
 
 describe(Money.name, () => {
-  it("should be able to create a new Money", () => {
-    const money = new Money();
-    expect(money).toBeTruthy();
+  [
+    { input: [-1], output: "One cent count is negative" },
+    { input: [0, -1], output: "Ten cent count is negative" },
+    { input: [0, 0, -1], output: "Quarter count is negative" },
+    { input: [0, 0, 0, -1], output: "One dollar count is negative" },
+    { input: [0, 0, 0, 0, -1], output: "Five dollars count is negative" },
+    { input: [0, 0, 0, 0, 0, -1], output: "Ten dollars count is negative" },
+  ].forEach(({ input, output }) => {
+    it(`should NOT be able to create a new Money with negative coins and notes`, () => {
+      expect(() => new Money(...input)).toThrowError(output);
+    });
   });
 
   describe("add", () => {

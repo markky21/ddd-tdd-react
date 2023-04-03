@@ -52,8 +52,14 @@ export class SnackMachine extends AggregateRoot {
   }
 
   buySnack(position: SnackMachineSlotsPosition): void {
-    this.slots[position].snackPile =
-      this.slots[position].snackPile.decreaseQuantity();
+    const snackPile = this.slots[position].snackPile;
+    Guard.againstTruthy(snackPile.isEmpty(), "There is no snack in the slot");
+    Guard.againstTruthy(
+      snackPile.price > this.moneyInTransaction.getTotalAmount(),
+      "Not enough money to buy the snack"
+    );
+
+    this.slots[position].snackPile = snackPile.decreaseQuantity();
     this._moneyInMachine = this._moneyInMachine.add(this.moneyInTransaction);
     this.moneyInTransaction = Money.None();
   }
