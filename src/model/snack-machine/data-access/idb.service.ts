@@ -1,6 +1,6 @@
 import { DBSchema, openDB } from "idb";
 import { IDBPDatabase } from "idb/build/entry";
-import { CoinsAndNotes } from "../core/value-objects/money";
+import { CoinsAndNotes } from "../core/aggregates/snack-machine/value-objects/money";
 
 type SnackMachine = CoinsAndNotes;
 

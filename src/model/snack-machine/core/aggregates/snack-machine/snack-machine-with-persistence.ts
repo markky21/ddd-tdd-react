@@ -1,6 +1,6 @@
 import { IdbService } from "../../../data-access/idb.service";
 import { SnackMachine } from "./snack-machine";
-import { Money } from "../../value-objects/money";
+import { Money } from "./value-objects/money";
 import { EntityId } from "../../../../shared/core/entities/entity.abstract";
 import { SnackMachineSlotsPosition } from "./entities/slot";
 
@@ -27,8 +27,19 @@ export class SnackMachineWithPersistence extends SnackMachine {
     }
   }
 
-  async buySnack(position: SnackMachineSlotsPosition): Promise<void> {
-    super.buySnack(position);
+  async buySnackAndStoreInDB(
+    position: SnackMachineSlotsPosition
+  ): Promise<Money> {
+    const moneyToReturn = super.buySnack(position);
+    await this.db.putSnackMachine(
+      this.getMoneyInMachine().getCoinsAndNotes(),
+      this.id as string
+    );
+    return moneyToReturn;
+  }
+
+  async loadMoneyAndStoreInDB(money: Money): Promise<void> {
+    super.loadMoney(money);
     await this.db.putSnackMachine(
       this.getMoneyInMachine().getCoinsAndNotes(),
       this.id as string

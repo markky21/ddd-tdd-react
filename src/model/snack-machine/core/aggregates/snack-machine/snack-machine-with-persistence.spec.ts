@@ -2,7 +2,7 @@ import "fake-indexeddb/auto";
 import { describe, it, expect } from "vitest";
 import { SnackMachineWithPersistence } from "./snack-machine-with-persistence";
 import { IdbService } from "../../../data-access/idb.service";
-import { Money } from "../../value-objects/money";
+import { Money } from "./value-objects/money";
 import { getTestDb } from "../../../data-access/idb.service.testing";
 import { Snack } from "../snack/snack";
 import { SnackPile } from "./value-objects/snack-pile";
@@ -40,7 +40,7 @@ describe(SnackMachineWithPersistence.name, () => {
 
     snackMachine.insertMoney(Money.Dollar());
     snackMachine.loadSnacks(0, getSnackPile());
-    await snackMachine.buySnack(0);
+    await snackMachine.buySnackAndStoreInDB(0);
 
     expect(snackMachine.getMoneyInMachine()).toEqual(
       Money.FiveDollar().add(Money.Dollar())

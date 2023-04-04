@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { Money } from "./money";
+import { Cash } from "./cash";
 
 describe(Money.name, () => {
   [
@@ -41,7 +42,7 @@ describe(Money.name, () => {
     });
   });
 
-  describe("substract", () => {
+  describe("subtraction", () => {
     [
       {
         inputs: { minuend: new Money(), subtrahend: new Money() },
@@ -147,6 +148,32 @@ describe(Money.name, () => {
       it("should return the amount in presentational form", () => {
         expect(input.getCoinsAndNotes()).toEqual(expected);
       });
+    });
+  });
+
+  describe("allocate", () => {
+    it("should be able to allocate money from biggest denomination to smallest", () => {
+      const money = new Money(5, 5, 5, 5, 5, 5);
+
+      const allocated = money.allocate(new Cash(26.48));
+
+      expect(allocated).toEqual(new Money(3, 2, 1, 1, 1, 2));
+    });
+
+    it("should be able to allocate money if available from biggest denomination to smallest", () => {
+      const money = new Money(5, 5, 5, 0, 5, 1);
+
+      const allocated = money.allocate(new Cash(26.48));
+
+      expect(allocated).toEqual(new Money(3, 2, 5, 0, 3, 1));
+    });
+
+    it("should throw an error if not enough money to allocate", () => {
+      const money = new Money(0, 5, 5, 0, 5, 1);
+
+      expect(() => money.allocate(new Cash(26.48))).toThrowError(
+        "Not enough money to allocate"
+      );
     });
   });
 });

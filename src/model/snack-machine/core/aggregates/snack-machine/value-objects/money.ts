@@ -1,6 +1,7 @@
-import { ValueObject } from "../../../shared/core/value-objects/value-object.abstract";
-import { Guard } from "../../../shared/core/utils/guard";
+import { ValueObject } from "../../../../../shared/core/value-objects/value-object.abstract";
+import { Guard } from "../../../../../shared/core/utils/guard";
 import Fraction from "fraction.js";
+import { Cash } from "./cash";
 
 export interface CoinsAndNotes {
   oneCentCount: number;
@@ -99,23 +100,6 @@ export class Money extends ValueObject<Money> {
     );
   }
 
-  toView(): string {
-    const totalAmount = this.getTotalAmount();
-    if (totalAmount === 0) {
-      return "¢0";
-    }
-    if (totalAmount < 1) {
-      return `¢${totalAmount * 100}`;
-    }
-    if (totalAmount % 1 === 0) {
-      return `$${totalAmount}.00`;
-    }
-    if ((totalAmount * 10) % 1 === 0) {
-      return `$${totalAmount}0`;
-    }
-    return `$${totalAmount}`;
-  }
-
   getCoinsAndNotes(): CoinsAndNotes {
     return {
       oneCentCount: this._oneCentCount,
@@ -125,6 +109,60 @@ export class Money extends ValueObject<Money> {
       fiveDollarCount: this._fiveDollarCount,
       tenDollarCount: this._tenDollarCount,
     };
+  }
+
+  toView(): string {
+    return new Cash(this.getTotalAmount()).toView();
+  }
+
+  allocate(cash: Cash): Money {
+    let cashLeft: Cash;
+    const tenDollarCount = Math.min(
+      this._tenDollarCount,
+      Math.floor(cash.amount / 10)
+    );
+    cashLeft = cash.subtraction(new Cash(tenDollarCount * 10));
+
+    const fiveDollarCount = Math.min(
+      this._fiveDollarCount,
+      Math.floor(cashLeft.amount / 5)
+    );
+    cashLeft = cashLeft.subtraction(new Cash(fiveDollarCount * 5));
+
+    const oneDollarCount = Math.min(
+      this._oneDollarCount,
+      Math.floor(cashLeft.amount)
+    );
+    cashLeft = cashLeft.subtraction(new Cash(oneDollarCount));
+
+    const quarterCount = Math.min(
+      this._quarterCentCount,
+      Math.floor(cashLeft.amount / 0.25)
+    );
+    cashLeft = cashLeft.subtraction(new Cash(quarterCount * 0.25));
+
+    const tenCentCount = Math.min(
+      this._tenCentCount,
+      Math.floor(cashLeft.amount / 0.1)
+    );
+    cashLeft = cashLeft.subtraction(new Cash(tenCentCount * 0.1));
+
+    const oneCentCount = Math.min(
+      this._oneCentCount,
+      Math.floor(cashLeft.amount / 0.01)
+    );
+    cashLeft = cashLeft.subtraction(new Cash(oneCentCount * 0.01));
+
+    Guard.againstTruthy(cashLeft.amount !== 0, "Not enough money to allocate");
+
+    return new Money(
+      oneCentCount,
+      tenCentCount,
+      quarterCount,
+      oneDollarCount,
+      fiveDollarCount,
+      tenDollarCount
+    );
   }
 
   static None(): Money {
