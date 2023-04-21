@@ -53,17 +53,6 @@ export class Money extends ValueObject<Money> {
     );
   }
 
-  getTotalAmount(): number {
-    return new Fraction(this._oneCentCount)
-      .mul(0.01)
-      .add(new Fraction(this._tenCentCount).mul(0.1))
-      .add(new Fraction(this._quarterCentCount).mul(0.25))
-      .add(new Fraction(this._oneDollarCount).mul(1))
-      .add(new Fraction(this._fiveDollarCount).mul(5))
-      .add(new Fraction(this._tenDollarCount).mul(10))
-      .valueOf();
-  }
-
   subtraction(money: Money): Money {
     Guard.againstNegativeNumber(
       this._oneCentCount - money._oneCentCount,
@@ -98,6 +87,34 @@ export class Money extends ValueObject<Money> {
       this._fiveDollarCount - money._fiveDollarCount,
       this._tenDollarCount - money._tenDollarCount
     );
+  }
+
+  multiply(multiplier: number): Money {
+    Guard.againstTruthy(
+      Math.floor(multiplier) !== multiplier,
+      "Multiplier is not an integer"
+    );
+    Guard.againstNegativeNumber(multiplier, "Multiplier is negative value");
+
+    return new Money(
+      this._oneCentCount * multiplier,
+      this._tenCentCount * multiplier,
+      this._quarterCentCount * multiplier,
+      this._oneDollarCount * multiplier,
+      this._fiveDollarCount * multiplier,
+      this._tenDollarCount * multiplier
+    );
+  }
+
+  getTotalAmount(): number {
+    return new Fraction(this._oneCentCount)
+      .mul(0.01)
+      .add(new Fraction(this._tenCentCount).mul(0.1))
+      .add(new Fraction(this._quarterCentCount).mul(0.25))
+      .add(new Fraction(this._oneDollarCount).mul(1))
+      .add(new Fraction(this._fiveDollarCount).mul(5))
+      .add(new Fraction(this._tenDollarCount).mul(10))
+      .valueOf();
   }
 
   getCoinsAndNotes(): CoinsAndNotes {
@@ -191,5 +208,16 @@ export class Money extends ValueObject<Money> {
 
   static TenDollar(): Money {
     return new Money(0, 0, 0, 0, 0, 1);
+  }
+
+  static FromCoinsAndNotes(coinsAndNotes: CoinsAndNotes): Money {
+    return new Money(
+      coinsAndNotes.oneCentCount,
+      coinsAndNotes.tenCentCount,
+      coinsAndNotes.quarterCentCount,
+      coinsAndNotes.oneDollarCount,
+      coinsAndNotes.fiveDollarCount,
+      coinsAndNotes.tenDollarCount
+    );
   }
 }

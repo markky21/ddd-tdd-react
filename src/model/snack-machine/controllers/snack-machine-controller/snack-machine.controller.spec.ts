@@ -2,26 +2,7 @@ import "fake-indexeddb/auto";
 import { SnackMachineController } from "./snack-machine.controller";
 import { describe, expect, it, vi } from "vitest";
 import { Money } from "../../core/aggregates/snack-machine/value-objects/money";
-import { SnackMachineWithPersistence } from "../../core/aggregates/snack-machine/snack-machine-with-persistence";
-import { getTestDb } from "../../data-access/idb.service.testing";
-import { nanoid } from "nanoid";
-import { Snack } from "../../core/aggregates/snack/snack";
-import { SnackPile } from "../../core/aggregates/snack-machine/value-objects/snack-pile";
-
-const getSUT = async (): Promise<{
-  controller: SnackMachineController;
-  snackMachine: SnackMachineWithPersistence;
-}> => {
-  const db = await getTestDb();
-  const snackMachine = new SnackMachineWithPersistence(nanoid(), db);
-  await snackMachine.load();
-
-  const snack = new Snack("Snickers");
-  await snackMachine.loadSnacks(0, new SnackPile(snack, 1, 10));
-  const controller = new SnackMachineController(snackMachine);
-
-  return { controller, snackMachine };
-};
+import { getSUT } from "./snack-machine.controller.test-utils";
 
 describe(SnackMachineController.name, () => {
   describe("initial state", () => {
@@ -42,7 +23,10 @@ describe(SnackMachineController.name, () => {
       const subscription = controller.coinsAndNotes$.subscribe(spy);
       subscription.unsubscribe();
 
-      expect(spy).toHaveBeenNthCalledWith(1, Money.None().getCoinsAndNotes());
+      expect(spy).toHaveBeenNthCalledWith(
+        1,
+        new Money(10, 10, 10, 10, 10, 10).getCoinsAndNotes()
+      );
     });
 
     it("should initially give empty message from snack machine", async () => {
@@ -102,7 +86,7 @@ describe(SnackMachineController.name, () => {
 
     it("should calculate coins and notes inside machine", async () => {
       const spy = vi.fn();
-      const { controller } = await getSUT();
+      const { controller, moneyInMachineInitial } = await getSUT();
 
       const subscription = controller.coinsAndNotes$.subscribe(spy);
       controller.insertOneCent();
@@ -110,11 +94,20 @@ describe(SnackMachineController.name, () => {
 
       subscription.unsubscribe();
 
-      expect(spy).toHaveBeenNthCalledWith(1, Money.None().getCoinsAndNotes());
-      expect(spy).toHaveBeenNthCalledWith(2, new Money(1).getCoinsAndNotes());
+      expect(spy).toHaveBeenNthCalledWith(
+        1,
+        moneyInMachineInitial.getCoinsAndNotes()
+      );
+      expect(spy).toHaveBeenNthCalledWith(
+        2,
+        moneyInMachineInitial.add(Money.OneCent()).getCoinsAndNotes()
+      );
       expect(spy).toHaveBeenNthCalledWith(
         3,
-        new Money(1, 1).getCoinsAndNotes()
+        moneyInMachineInitial
+          .add(Money.OneCent())
+          .add(Money.TenCent())
+          .getCoinsAndNotes()
       );
     });
   });
@@ -150,7 +143,7 @@ describe(SnackMachineController.name, () => {
 
     it("should calculate coins and notes inside machine", async () => {
       const spy = vi.fn();
-      const { controller } = await getSUT();
+      const { controller, moneyInMachineInitial } = await getSUT();
 
       const subscription = controller.coinsAndNotes$.subscribe(spy);
       controller.insertOneCent();
@@ -161,9 +154,12 @@ describe(SnackMachineController.name, () => {
 
       expect(spy).toHaveBeenNthCalledWith(
         3,
-        new Money(1, 1).getCoinsAndNotes()
+        moneyInMachineInitial.add(new Money(1, 1)).getCoinsAndNotes()
       );
-      expect(spy).toHaveBeenNthCalledWith(4, Money.None().getCoinsAndNotes());
+      expect(spy).toHaveBeenNthCalledWith(
+        4,
+        moneyInMachineInitial.getCoinsAndNotes()
+      );
     });
   });
 
@@ -195,8 +191,7 @@ describe(SnackMachineController.name, () => {
 
     it("should calculate coins and notes inside machine", async () => {
       const spy = vi.fn();
-      const { controller, snackMachine } = await getSUT();
-      await snackMachine.loadMoneyAndStoreInDB(new Money(5, 5, 5, 5, 5, 5));
+      const { controller } = await getSUT();
 
       const subscription = controller.coinsAndNotes$.subscribe(spy);
       controller.insertDollar();
@@ -207,7 +202,7 @@ describe(SnackMachineController.name, () => {
       subscription.unsubscribe();
 
       expect(spy).toHaveBeenLastCalledWith(
-        new Money(5, 5, 5, 2, 6, 5).getCoinsAndNotes()
+        new Money(10, 10, 10, 7, 11, 10).getCoinsAndNotes()
       );
     });
   });

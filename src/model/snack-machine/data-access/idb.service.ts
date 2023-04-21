@@ -1,12 +1,18 @@
 import { DBSchema, openDB } from "idb";
 import { IDBPDatabase } from "idb/build/entry";
-import { CoinsAndNotes } from "../core/aggregates/snack-machine/value-objects/money";
-
-type SnackMachine = CoinsAndNotes;
+import { SlotFromDb, SnackMachineFromDb, SnackFromDb } from "./idb.model";
 
 interface MyDB extends DBSchema {
   "snack-machine": {
-    value: SnackMachine;
+    value: SnackMachineFromDb;
+    key: string;
+  };
+  slot: {
+    value: SlotFromDb;
+    key: string;
+  };
+  snack: {
+    value: SnackFromDb;
     key: string;
   };
 }
@@ -15,7 +21,7 @@ export class IdbService {
   private db: IDBPDatabase<MyDB> = {} as IDBPDatabase<MyDB>;
 
   constructor(
-    private dbName: string = "snackMachine",
+    private dbName: string = "ddd-snack-machine",
     private version: number = 1
   ) {}
 
@@ -23,6 +29,12 @@ export class IdbService {
     this.db = await openDB<MyDB>(this.dbName, this.version, {
       upgrade(db) {
         db.createObjectStore("snack-machine", {
+          autoIncrement: true,
+        });
+        db.createObjectStore("slot", {
+          autoIncrement: true,
+        });
+        db.createObjectStore("snack", {
           autoIncrement: true,
         });
       },
@@ -34,16 +46,57 @@ export class IdbService {
     return !this.db.version ? this.initialize() : this.db;
   }
 
-  async putSnackMachine(
-    snackMachine: SnackMachine,
-    id?: string
+  async getSnackMachineById(
+    id: string
+  ): Promise<SnackMachineFromDb | undefined> {
+    const db = await this.getDb();
+    return db.get("snack-machine", id);
+  }
+
+  async putSnackMachineById(
+    id: string,
+    snackMachine: SnackMachineFromDb
   ): Promise<string> {
     const db = await this.getDb();
     return db.put("snack-machine", snackMachine, id);
   }
 
-  async getSnackMachine(id: string): Promise<SnackMachine | undefined> {
+  async getSnackById(id: string): Promise<SnackFromDb | undefined> {
     const db = await this.getDb();
-    return db.get("snack-machine", id);
+    return db.get("snack", id);
+  }
+
+  async putSnackById(id: string, snack: SnackFromDb): Promise<string> {
+    const db = await this.getDb();
+    return db.put("snack", snack, id);
+  }
+
+  async getSlotById(id: string): Promise<SlotFromDb | undefined> {
+    const db = await this.getDb();
+    return db.get("slot", id);
+  }
+
+  async putSlotById(id: string, slot: SlotFromDb): Promise<string> {
+    const db = await this.getDb();
+    return db.put("slot", slot, id);
+  }
+
+  /**
+   * For debugging purposes
+   */
+
+  async getAllSnackMachines(): Promise<SnackMachineFromDb[]> {
+    const db = await this.getDb();
+    return db.getAll("snack-machine");
+  }
+
+  async getAllSnacks(): Promise<SnackFromDb[]> {
+    const db = await this.getDb();
+    return db.getAll("snack");
+  }
+
+  async getAllSlots(): Promise<SlotFromDb[]> {
+    const db = await this.getDb();
+    return db.getAll("slot");
   }
 }

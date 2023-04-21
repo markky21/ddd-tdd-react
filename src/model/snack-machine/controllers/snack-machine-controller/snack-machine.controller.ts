@@ -3,10 +3,16 @@ import { BehaviorSubject, map, ReplaySubject } from "rxjs";
 import { SnackMachineWithPersistence } from "../../core/aggregates/snack-machine/snack-machine-with-persistence";
 import { SnackMachineSlotsPosition } from "../../core/aggregates/snack-machine/entities/slot";
 import { Cash } from "../../core/aggregates/snack-machine/value-objects/cash";
+import { SnackMachineRepository } from "../../repositories/snack-machine.repository";
+import { SnackRepository } from "../../repositories/snack.repository";
+import { EntityId } from "../../../shared/core/entities/entity.abstract";
+import { SnackMachine } from "../../core/aggregates/snack-machine/snack-machine";
+import { Guard } from "../../../shared/core/utils/guard";
 
 export class SnackMachineController {
   private readonly _moneyInserted$ = new ReplaySubject<Cash>();
   private readonly _moneyInMachine$ = new ReplaySubject<Money>();
+  private snackMachine: SnackMachineWithPersistence | null = null;
 
   public readonly moneyInserted$ = this._moneyInserted$.pipe(
     map((cash) => cash.toView())
@@ -17,9 +23,25 @@ export class SnackMachineController {
     map((moneyInMachine) => moneyInMachine.getCoinsAndNotes())
   );
 
-  constructor(private readonly snackMachine: SnackMachineWithPersistence) {
+  public get snackMachineId(): EntityId | null {
+    return this._snackMachineId;
+  }
+  private _snackMachineId: EntityId | null = null;
+
+  constructor(
+    private readonly snackMachineRepository: SnackMachineRepository,
+    private readonly snackRepository: SnackRepository
+  ) {}
+
+  public async initializeSnackMachine(snackMachineId: EntityId): Promise<void> {
+    this.snackMachine = await this.snackMachineRepository.getById(
+      snackMachineId
+    );
+    this._snackMachineId = snackMachineId;
+
     this._moneyInserted$.next(this.snackMachine.getMoneyInTransaction());
     this._moneyInMachine$.next(this.snackMachine.getMoneyInMachine());
+    return;
   }
 
   public insertOneCent(): void {
@@ -42,23 +64,53 @@ export class SnackMachineController {
   }
 
   public async buySnack(position: SnackMachineSlotsPosition): Promise<void> {
-    await this.snackMachine.buySnackAndStoreInDB(position);
+    this.guardIsSnackMachine();
+    if (
+      !SnackMachineController.assertSnackMachineIsInitialized(this.snackMachine)
+    )
+      return;
+
+    await this.snackMachine.buySnack(position);
+    await this.snackMachineRepository.saveOrUpdate(this.snackMachine);
     this._moneyInserted$.next(this.snackMachine.getMoneyInTransaction());
     this._moneyInMachine$.next(this.snackMachine.getMoneyInMachine());
     this.message$.next(`You have bought a snack`);
   }
 
   public returnMoney(): void {
+    this.guardIsSnackMachine();
+    if (
+      !SnackMachineController.assertSnackMachineIsInitialized(this.snackMachine)
+    )
+      return;
+
     this.snackMachine.returnMoney();
+
     this._moneyInserted$.next(this.snackMachine.getMoneyInTransaction());
     this._moneyInMachine$.next(this.snackMachine.getMoneyInMachine());
     this.message$.next("Money returned");
   }
 
   private insertMoney(coinOrNode: Money): void {
+    this.guardIsSnackMachine();
+    if (
+      !SnackMachineController.assertSnackMachineIsInitialized(this.snackMachine)
+    )
+      return;
+
     this.snackMachine.insertMoney(coinOrNode);
     this._moneyInserted$.next(this.snackMachine.getMoneyInTransaction());
     this._moneyInMachine$.next(this.snackMachine.getMoneyInMachine());
     this.message$.next(`You inserted ${coinOrNode.toView()}`);
+  }
+
+  private guardIsSnackMachine(): void {
+    Guard.againstTruthy(!this.snackMachine, "Snack machine is not initialized");
+  }
+
+  private static assertSnackMachineIsInitialized(
+    snackMachine: SnackMachine | null
+  ): snackMachine is SnackMachine {
+    return snackMachine !== null;
   }
 }

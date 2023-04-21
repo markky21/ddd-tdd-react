@@ -25,6 +25,26 @@ describe(Money.name, () => {
     });
   });
 
+  describe("multiply", () => {
+    it("should be able to multiply money", () => {
+      const money1 = new Money(0, 2, 0, 4);
+
+      expect(money1.multiply(2)).toEqual(new Money(0, 4, 0, 8));
+    });
+
+    it("should NOT be able to multiply money with fraction", () => {
+      expect(() => new Money().multiply(0.5)).toThrowError(
+        "Multiplier is not an integer"
+      );
+    });
+
+    it("should NOT be able to multiply money with negative value", () => {
+      expect(() => new Money().multiply(-2)).toThrowError(
+        "Multiplier is negative value"
+      );
+    });
+  });
+
   describe("getTotalAmount", () => {
     [
       { input: Money.None(), expected: 0 },

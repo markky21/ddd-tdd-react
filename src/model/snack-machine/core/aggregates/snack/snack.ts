@@ -1,8 +1,8 @@
-import { nanoid } from "nanoid";
 import { AggregateRoot } from "../../../../shared/core/aggregates/aggregate-root.abstract";
+import { EntityId } from "../../../../shared/core/entities/entity.abstract";
 
 export class Snack extends AggregateRoot {
-  constructor(public readonly name: string) {
-    super(nanoid());
+  constructor(public readonly id: EntityId, public name: string) {
+    super(id);
   }
 }

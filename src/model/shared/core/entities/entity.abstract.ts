@@ -1,4 +1,4 @@
-export type EntityId = string | number | undefined;
+export type EntityId = string;
 export abstract class Entity {
   constructor(public readonly id: EntityId) {}
 

@@ -1,33 +1,37 @@
 import { Money } from "./value-objects/money";
-import { EntityId } from "../../../../shared/core/entities/entity.abstract";
 import { Guard } from "../../../../shared/core/utils/guard";
 import { Slot, SnackMachineSlotsPosition } from "./entities/slot";
 import { AggregateRoot } from "../../../../shared/core/aggregates/aggregate-root.abstract";
 import { SnackPile } from "./value-objects/snack-pile";
 import { Cash } from "./value-objects/cash";
+import { EntityId } from "../../../../shared/core/entities/entity.abstract";
+import { nanoid } from "nanoid";
 
-type SnackMachineSlots = [Slot, Slot, Slot];
+export type SnackMachineSlots = [Slot, Slot, Slot];
 export class SnackMachine extends AggregateRoot {
   private moneyInTransaction: Cash = Cash.None();
-  private slots: SnackMachineSlots = [
-    new Slot(this, 0),
-    new Slot(this, 1),
-    new Slot(this, 2),
+
+  protected slots: SnackMachineSlots = [
+    new Slot(nanoid(), this.id, 0),
+    new Slot(nanoid(), this.id, 1),
+    new Slot(nanoid(), this.id, 2),
   ];
+
+  protected moneyInMachine: Money = Money.None();
 
   getMoneyInTransaction(): Cash {
     return this.moneyInTransaction;
   }
   getMoneyInMachine(): Money {
-    return this._moneyInMachine;
+    return this.moneyInMachine;
   }
 
   getSnackPile(position: SnackMachineSlotsPosition): SnackPile {
     return this.slots[position].snackPile;
   }
 
-  constructor(id: EntityId, protected _moneyInMachine: Money = Money.None()) {
-    super(id);
+  getSlotsIds(): EntityId[] {
+    return this.slots.map((slot) => slot.id);
   }
 
   insertMoney(amount: Money): void {
@@ -46,7 +50,7 @@ export class SnackMachine extends AggregateRoot {
     this.moneyInTransaction = this.moneyInTransaction.add(
       new Cash(amount.getTotalAmount())
     );
-    this._moneyInMachine = this._moneyInMachine.add(amount);
+    this.moneyInMachine = this.moneyInMachine.add(amount);
   }
 
   returnMoney(): Money {
@@ -70,17 +74,16 @@ export class SnackMachine extends AggregateRoot {
   }
 
   loadSnacks(position: SnackMachineSlotsPosition, snackPile: SnackPile): void {
-    this.slots[position] = new Slot(this, position);
-    this.slots[position].snackPile = snackPile;
+    this.slots[position].loadSnackPile(snackPile);
   }
 
   loadMoney(money: Money): void {
-    this._moneyInMachine = this._moneyInMachine.add(money);
+    this.moneyInMachine = this.moneyInMachine.add(money);
   }
 
   private finalizeTransaction(cash: Cash): Money {
-    const moneyToReturn = this._moneyInMachine.allocate(cash);
-    this._moneyInMachine = this._moneyInMachine.subtraction(moneyToReturn);
+    const moneyToReturn = this.moneyInMachine.allocate(cash);
+    this.moneyInMachine = this.moneyInMachine.subtraction(moneyToReturn);
     this.moneyInTransaction = Cash.None();
     return moneyToReturn;
   }

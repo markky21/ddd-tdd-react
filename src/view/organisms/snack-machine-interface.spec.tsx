@@ -2,29 +2,13 @@ import "fake-indexeddb/auto";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { SnackMachineInterface } from "./snack-machine-interface";
-import { SnackMachineWithPersistence } from "../../model/snack-machine/core/aggregates/snack-machine/snack-machine-with-persistence";
 import { SnackMachineController } from "../../model/snack-machine/controllers/snack-machine-controller/snack-machine.controller";
-import { getTestDb } from "../../model/snack-machine/data-access/idb.service.testing";
-import { Snack } from "../../model/snack-machine/core/aggregates/snack/snack";
-import { nanoid } from "nanoid";
 import "@testing-library/jest-dom";
-import { SnackPile } from "../../model/snack-machine/core/aggregates/snack-machine/value-objects/snack-pile";
-import { Money } from "../../model/snack-machine/core/aggregates/snack-machine/value-objects/money";
-
-const getSnackPile = () => {
-  const snack = new Snack("Snickers");
-  return new SnackPile(snack, 1, 10);
-};
+import { getSUT } from "../../model/snack-machine/controllers/snack-machine-controller/snack-machine.controller.test-utils";
 
 const getController = async (): Promise<SnackMachineController> => {
-  const db = await getTestDb();
-  const snackMachine = new SnackMachineWithPersistence(nanoid(), db);
-  await snackMachine.load();
-  await snackMachine.loadMoneyAndStoreInDB(new Money(5, 5, 5, 5, 5, 5));
-
-  snackMachine.loadSnacks(0, getSnackPile());
-
-  return new SnackMachineController(snackMachine);
+  const { controller } = await getSUT();
+  return controller;
 };
 
 describe(SnackMachineInterface.name, () => {
@@ -101,27 +85,27 @@ describe(SnackMachineInterface.name, () => {
 
     await waitFor(() =>
       expect(screen.getByTestId("moneyInside")).toHaveTextContent(
-        "Money inside: ¢1: 5¢10: 5¢25: 5$1: 5$5: 5$10: 5"
+        "Money inside: ¢1: 10¢10: 10¢25: 10$1: 10$5: 10$10: 10"
       )
     );
 
     fireEvent.click(screen.getByText("Put $10"));
     await waitFor(() =>
       expect(screen.getByTestId("moneyInside")).toHaveTextContent(
-        "Money inside: ¢1: 5¢10: 5¢25: 5$1: 5$5: 5$10: 6"
+        "Money inside: ¢1: 10¢10: 10¢25: 10$1: 10$5: 10$10: 11"
       )
     );
 
     fireEvent.click(screen.getByText("Buy a snack 1"));
     await waitFor(() =>
       expect(screen.getByTestId("moneyInside")).toHaveTextContent(
-        "Money inside: ¢1: 5¢10: 5¢25: 5$1: 1$5: 4$10: 6"
+        "Money inside: ¢1: 10¢10: 10¢25: 10$1: 6$5: 9$10: 11"
       )
     );
 
     fireEvent.click(screen.getByText("Put $5"));
     expect(screen.getByTestId("moneyInside")).toHaveTextContent(
-      "Money inside: ¢1: 5¢10: 5¢25: 5$1: 1$5: 5$10: 6"
+      "Money inside: ¢1: 10¢10: 10¢25: 10$1: 6$5: 10$10: 11"
     );
   });
 });

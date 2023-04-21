@@ -1,48 +1,21 @@
-import { IdbService } from "../../../data-access/idb.service";
-import { SnackMachine } from "./snack-machine";
-import { Money } from "./value-objects/money";
-import { EntityId } from "../../../../shared/core/entities/entity.abstract";
-import { SnackMachineSlotsPosition } from "./entities/slot";
+import { SnackMachine, SnackMachineSlots } from "./snack-machine";
+import { Slot, SnackMachineSlotsPosition } from "./entities/slot";
 
 export class SnackMachineWithPersistence extends SnackMachine {
-  constructor(id: EntityId, private db: IdbService) {
-    super(id);
+  _setSlot(position: SnackMachineSlotsPosition, slot: Slot): void {
+    this.slots[position] = slot;
   }
 
-  async load(): Promise<void> {
-    const moneyInMachine = await this.db.getSnackMachine(this.id as string);
-    if (moneyInMachine) {
-      this._moneyInMachine = new Money(
-        moneyInMachine.oneCentCount,
-        moneyInMachine.tenCentCount,
-        moneyInMachine.quarterCentCount,
-        moneyInMachine.oneDollarCount,
-        moneyInMachine.fiveDollarCount,
-        moneyInMachine.tenDollarCount
-      );
-    } else {
-      await this.db.putSnackMachine(
-        this.getMoneyInMachine().getCoinsAndNotes()
+  _getSlots(): SnackMachineSlots {
+    return this.slots;
+  }
+
+  _setSlotsIds(slotsIds: string[]): void {
+    for (const [index, slotId] of slotsIds.entries()) {
+      this._setSlot(
+        index as SnackMachineSlotsPosition,
+        new Slot(slotId, this.id, index as SnackMachineSlotsPosition)
       );
     }
-  }
-
-  async buySnackAndStoreInDB(
-    position: SnackMachineSlotsPosition
-  ): Promise<Money> {
-    const moneyToReturn = super.buySnack(position);
-    await this.db.putSnackMachine(
-      this.getMoneyInMachine().getCoinsAndNotes(),
-      this.id as string
-    );
-    return moneyToReturn;
-  }
-
-  async loadMoneyAndStoreInDB(money: Money): Promise<void> {
-    super.loadMoney(money);
-    await this.db.putSnackMachine(
-      this.getMoneyInMachine().getCoinsAndNotes(),
-      this.id as string
-    );
   }
 }
