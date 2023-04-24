@@ -1,4 +1,3 @@
-import { describe } from "vitest";
 import { SnackPile } from "./snack-pile";
 
 describe(SnackPile.name, () => {

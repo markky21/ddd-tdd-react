@@ -1,4 +1,3 @@
-import { describe, expect, it } from "vitest";
 import { SnackMachine } from "./snack-machine";
 import { Money } from "./value-objects/money";
 import { Snack } from "../snack/snack";

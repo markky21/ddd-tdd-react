@@ -1,13 +1,10 @@
-import "fake-indexeddb/auto";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
 import { SnackMachineInterface } from "./snack-machine-interface";
 import { SnackMachineController } from "../../model/snack-machine/controllers/snack-machine-controller/snack-machine.controller";
-import "@testing-library/jest-dom";
-import { getSUT } from "../../model/snack-machine/controllers/snack-machine-controller/snack-machine.controller.test-utils";
+import { getSnackMachineControllerFixture } from "../../model/snack-machine/controllers/snack-machine-controller/snack-machine.controller.fixture";
 
 const getController = async (): Promise<SnackMachineController> => {
-  const { controller } = await getSUT();
+  const { controller } = await getSnackMachineControllerFixture();
   return controller;
 };
 

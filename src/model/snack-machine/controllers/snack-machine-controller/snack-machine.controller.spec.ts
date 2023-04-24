@@ -1,14 +1,12 @@
-import "fake-indexeddb/auto";
 import { SnackMachineController } from "./snack-machine.controller";
-import { describe, expect, it, vi } from "vitest";
 import { Money } from "../../core/aggregates/snack-machine/value-objects/money";
-import { getSUT } from "./snack-machine.controller.test-utils";
+import { getSnackMachineControllerFixture } from "./snack-machine.controller.fixture";
 
 describe(SnackMachineController.name, () => {
   describe("initial state", () => {
     it("should initially give information about inserted money", async () => {
       const spy = vi.fn();
-      const { controller } = await getSUT();
+      const { controller } = await getSnackMachineControllerFixture();
 
       const subscription = controller.moneyInserted$.subscribe(spy);
       subscription.unsubscribe();
@@ -18,7 +16,7 @@ describe(SnackMachineController.name, () => {
 
     it("should initially give information about inserted money in snack machine", async () => {
       const spy = vi.fn();
-      const { controller } = await getSUT();
+      const { controller } = await getSnackMachineControllerFixture();
 
       const subscription = controller.coinsAndNotes$.subscribe(spy);
       subscription.unsubscribe();
@@ -31,7 +29,7 @@ describe(SnackMachineController.name, () => {
 
     it("should initially give empty message from snack machine", async () => {
       const spy = vi.fn();
-      const { controller } = await getSUT();
+      const { controller } = await getSnackMachineControllerFixture();
 
       const subscription = controller.message$.subscribe(spy);
       subscription.unsubscribe();
@@ -43,7 +41,7 @@ describe(SnackMachineController.name, () => {
   describe("inserting money", () => {
     it("should to insert money into snack machine", async () => {
       const spy = vi.fn();
-      const { controller } = await getSUT();
+      const { controller } = await getSnackMachineControllerFixture();
 
       const subscription = controller.moneyInserted$.subscribe(spy);
       controller.insertOneCent();
@@ -65,7 +63,7 @@ describe(SnackMachineController.name, () => {
 
     it("should return message from snack machine", async () => {
       const spy = vi.fn();
-      const { controller } = await getSUT();
+      const { controller } = await getSnackMachineControllerFixture();
 
       const subscription = controller.message$.subscribe(spy);
       controller.insertOneCent();
@@ -86,7 +84,10 @@ describe(SnackMachineController.name, () => {
 
     it("should calculate coins and notes inside machine", async () => {
       const spy = vi.fn();
-      const { controller, moneyInMachineInitial } = await getSUT();
+      const {
+        controller,
+        snackMachineRepositoryFixture: { moneyInMachineInitial },
+      } = await getSnackMachineControllerFixture();
 
       const subscription = controller.coinsAndNotes$.subscribe(spy);
       controller.insertOneCent();
@@ -115,7 +116,7 @@ describe(SnackMachineController.name, () => {
   describe("returning money", () => {
     it("should to return money from snack machine", async () => {
       const spy = vi.fn();
-      const { controller } = await getSUT();
+      const { controller } = await getSnackMachineControllerFixture();
 
       const subscription = controller.moneyInserted$.subscribe(spy);
       controller.insertOneCent();
@@ -131,7 +132,7 @@ describe(SnackMachineController.name, () => {
 
     it("should to return message from snack machine", async () => {
       const spy = vi.fn();
-      const { controller } = await getSUT();
+      const { controller } = await getSnackMachineControllerFixture();
 
       const subscription = controller.message$.subscribe(spy);
       controller.insertOneCent();
@@ -143,7 +144,10 @@ describe(SnackMachineController.name, () => {
 
     it("should calculate coins and notes inside machine", async () => {
       const spy = vi.fn();
-      const { controller, moneyInMachineInitial } = await getSUT();
+      const {
+        controller,
+        snackMachineRepositoryFixture: { moneyInMachineInitial },
+      } = await getSnackMachineControllerFixture();
 
       const subscription = controller.coinsAndNotes$.subscribe(spy);
       controller.insertOneCent();
@@ -166,7 +170,7 @@ describe(SnackMachineController.name, () => {
   describe("buying snack", () => {
     it("should to buy from snack machine", async () => {
       const spy = vi.fn();
-      const { controller } = await getSUT();
+      const { controller } = await getSnackMachineControllerFixture();
 
       const subscription = controller.moneyInserted$.subscribe(spy);
       controller.insertDollar();
@@ -179,7 +183,7 @@ describe(SnackMachineController.name, () => {
 
     it("should to return message from snack machine", async () => {
       const spy = vi.fn();
-      const { controller } = await getSUT();
+      const { controller } = await getSnackMachineControllerFixture();
 
       const subscription = controller.message$.subscribe(spy);
       controller.insertDollar();
@@ -191,7 +195,7 @@ describe(SnackMachineController.name, () => {
 
     it("should calculate coins and notes inside machine", async () => {
       const spy = vi.fn();
-      const { controller } = await getSUT();
+      const { controller } = await getSnackMachineControllerFixture();
 
       const subscription = controller.coinsAndNotes$.subscribe(spy);
       controller.insertDollar();

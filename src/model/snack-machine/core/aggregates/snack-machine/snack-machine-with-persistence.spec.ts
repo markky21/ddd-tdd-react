@@ -1,4 +1,3 @@
-import { describe, it } from "vitest";
 import { SnackMachineWithPersistence } from "./snack-machine-with-persistence";
 
 describe(SnackMachineWithPersistence.name, () => {

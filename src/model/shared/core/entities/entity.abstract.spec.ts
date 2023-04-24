@@ -1,4 +1,3 @@
-import { describe, expect, it } from "vitest";
 import { Entity } from "./entity.abstract";
 
 class SimpleEntity extends Entity {}

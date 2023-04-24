@@ -1,4 +1,3 @@
-import { describe, expect, it } from "vitest";
 import { ValueObject } from "./value-object.abstract";
 
 class SimpleObjectValue extends ValueObject<unknown> {
