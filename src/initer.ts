@@ -6,7 +6,6 @@ import { EntityId } from "./shared/core/entities/entity.abstract";
 import { nanoid } from "nanoid";
 import { SnackMachineWithPersistence } from "./snack-machine-domain/model/aggregates/snack-machine/snack-machine-with-persistence";
 import { Snack } from "./snack-machine-domain/model/aggregates/snack/snack";
-import { SnackMap } from "./snack-machine-domain/repository/mappers/snack.map";
 import {
   Slot,
   SnackMachineSlotsPosition,
@@ -52,11 +51,8 @@ export class Initer {
   ) {
     const snackMachineToSave = new SnackMachineWithPersistence(snackMachineId);
 
-    const snack0 = new Snack(nanoid(), "Snickers");
-    await db.putSnackById(snack0.id, SnackMap.toPersistence(snack0));
-
     const snackPosition: SnackMachineSlotsPosition = 0;
-    const snackPile0 = new SnackPile(snack0, 1, 10);
+    const snackPile0 = new SnackPile(Snack.Chocolate, 1, 10);
 
     const slot0 = new Slot(nanoid(), snackMachineId, 0);
     const slot1 = new Slot(nanoid(), snackMachineId, 1);
@@ -78,7 +74,5 @@ export class Initer {
     await db.putSlotById(slot0.id, SlotMap.toPersistence(slot0));
     await db.putSlotById(slot1.id, SlotMap.toPersistence(slot1));
     await db.putSlotById(slot2.id, SlotMap.toPersistence(slot2));
-
-    await db.putSnackById(snack0.id, SnackMap.toPersistence(snack0));
   }
 }

@@ -9,7 +9,7 @@ import { nanoid } from "nanoid";
 
 export type SnackMachineSlots = [Slot, Slot, Slot];
 export class SnackMachine extends AggregateRoot {
-  private moneyInTransaction: Cash = Cash.None();
+  private moneyInTransaction: Cash = Cash.None;
 
   protected slots: SnackMachineSlots = [
     new Slot(nanoid(), this.id, 0),
@@ -84,7 +84,7 @@ export class SnackMachine extends AggregateRoot {
   private finalizeTransaction(cash: Cash): Money {
     const moneyToReturn = this.moneyInMachine.allocate(cash);
     this.moneyInMachine = this.moneyInMachine.subtraction(moneyToReturn);
-    this.moneyInTransaction = Cash.None();
+    this.moneyInTransaction = Cash.None;
     return moneyToReturn;
   }
 }

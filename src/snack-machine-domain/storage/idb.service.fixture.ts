@@ -1,6 +1,8 @@
 import { IdbService } from "./idb.service";
 import { nanoid } from "nanoid";
 import { SlotFromDb, SnackFromDb, SnackMachineFromDb } from "./idb.model";
+import { Snack } from "../model/aggregates/snack/snack";
+import { SnackMap } from "../repository/mappers/snack.map";
 
 export async function getTestDb(
   dBName: string = nanoid()
@@ -11,45 +13,11 @@ export async function getTestDb(
 }
 
 export const seedTestDb = async (db: IdbService) => {
-  // const snackMachineId = nanoid();
-  // const snackMachineToSave = new SnackMachineWithPersistence(snackMachineId);
-  //
-  // const snack0 = new Snack(nanoid(), "Snickers");
-  // await db.putSnackById(snack0.id, SnackMap.toPersistence(snack0));
-  //
-  // const snackPosition: SnackMachineSlotsPosition = 0;
-  // const snackPile0 = new SnackPile(snack0, 1, 10);
-  //
-  // const slot0 = new Slot(nanoid(), snackMachineId, 0);
-  // const slot1 = new Slot(nanoid(), snackMachineId, 1);
-  // const slot2 = new Slot(nanoid(), snackMachineId, 2);
-  //
-  // slot0.loadSnackPile(snackPile0);
-  //
-  // snackMachineToSave.loadSnacks(snackPosition, snackPile0);
-  // snackMachineToSave.loadMoney(new Money(10, 10, 10, 10, 10, 10));
-  // snackMachineToSave._setSlot(0, slot0);
-  // snackMachineToSave._setSlot(1, slot1);
-  // snackMachineToSave._setSlot(2, slot2);
-
-  // await db.putSnackMachineById(
-  //     snackMachineId,
-  //     SnackMachineMap.toPersistence(snackMachineToSave)
-  // );
-  // await db.putSlotById(slot0.id, SlotMap.toPersistence(slot0));
-  // await db.putSlotById(slot1.id, SlotMap.toPersistence(slot1));
-  // await db.putSlotById(slot2.id, SlotMap.toPersistence(slot2));
-  // await db.putSnackById(snack0.id, SnackMap.toPersistence(snack0));
-  //
-  // const allSnacks = await db.getAllSnacks();
-  // const allSnackMachines = await db.getAllSnackMachines();
-  // const getAllSlots = await db.getAllSlots();
-
   const snackMachineId = nanoid();
   const slot0Id = nanoid();
   const slot1Id = nanoid();
   const slot2Id = nanoid();
-  const snack0Id = nanoid();
+  const snack0Id = Snack.Chocolate.id;
 
   const snackMachineSeed: SnackMachineFromDb = {
     id: snackMachineId,
@@ -87,10 +55,7 @@ export const seedTestDb = async (db: IdbService) => {
     snackId: null,
     position: 2,
   };
-  const snack0Seed: SnackFromDb = {
-    id: snack0Id,
-    name: "Snickers",
-  };
+  const snack0Seed: SnackFromDb = SnackMap.toPersistence(Snack.Chocolate);
 
   await db.putSnackMachineById(snackMachineId, snackMachineSeed);
   await db.putSlotById(slot0Id, slot0Seed);

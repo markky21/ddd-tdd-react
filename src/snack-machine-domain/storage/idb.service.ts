@@ -80,23 +80,4 @@ export class IdbService {
     const db = await this.getDb();
     return db.put("slot", slot, id);
   }
-
-  /**
-   * For debugging purposes
-   */
-
-  async getAllSnackMachines(): Promise<SnackMachineFromDb[]> {
-    const db = await this.getDb();
-    return db.getAll("snack-machine");
-  }
-
-  async getAllSnacks(): Promise<SnackFromDb[]> {
-    const db = await this.getDb();
-    return db.getAll("snack");
-  }
-
-  async getAllSlots(): Promise<SlotFromDb[]> {
-    const db = await this.getDb();
-    return db.getAll("slot");
-  }
 }

@@ -14,6 +14,7 @@ import { SlotMap } from "./mappers/slot.map";
 import { SnackPile } from "../model/aggregates/snack-machine/value-objects/snack-pile";
 import { SnackMachineWithPersistence } from "../model/aggregates/snack-machine/snack-machine-with-persistence";
 import { SnackMap } from "./mappers/snack.map";
+import { Snack } from "../model/aggregates/snack/snack";
 
 //NOTE: In Course db was loaded by singleton pattern
 //      probably it's better to use singleton Pattern  for snackRepository
@@ -74,7 +75,9 @@ export class SnackMachineRepository extends Repository<SnackMachine> {
     slotFromDb: SlotFromDb
   ): Promise<SnackPile> {
     const snackId = slotFromDb.snackId;
-    const snack = snackId ? await this.snackRepository.getById(snackId) : null;
+    const snack = snackId
+      ? await this.snackRepository.getById(snackId)
+      : Snack.None;
     return new SnackPile(snack, slotFromDb.price, slotFromDb.quantity);
   }
 }

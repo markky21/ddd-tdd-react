@@ -24,7 +24,7 @@ describe(SnackMachineRepository.name, () => {
       snackMachineRepository,
       dbFixture: { snackMachineId },
     } = await getSnackMachineRepositoryFixture();
-    const snack = new Snack("1", "test");
+    const snack = Snack.Chocolate;
     const snackPile = new SnackPile(snack, 2, 5);
 
     const snackMachine = await snackMachineRepository.getById(snackMachineId);

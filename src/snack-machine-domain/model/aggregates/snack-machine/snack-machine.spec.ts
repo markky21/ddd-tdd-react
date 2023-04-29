@@ -34,7 +34,7 @@ describe(SnackMachine.name, () => {
       snackMachine.insertMoney(Money.FiveDollar());
 
       expect(snackMachine.returnMoney()).toEqual(new Money(1, 2, 0, 0, 0, 1));
-      expect(snackMachine.getMoneyInTransaction()).toEqual(Cash.None());
+      expect(snackMachine.getMoneyInTransaction()).toEqual(Cash.None);
     });
   });
 
@@ -61,15 +61,12 @@ describe(SnackMachine.name, () => {
   describe("buySnack", () => {
     it("should be able to buy a snack", () => {
       const snackMachine = new SnackMachine("1");
-      snackMachine.loadSnacks(
-        0,
-        new SnackPile(new Snack("1", "Snickers"), 1, 10)
-      );
+      snackMachine.loadSnacks(0, new SnackPile(Snack.Chocolate, 1, 10));
       snackMachine.insertMoney(Money.Dollar());
 
       snackMachine.buySnack(0);
 
-      expect(snackMachine.getMoneyInTransaction()).toEqual(Cash.None());
+      expect(snackMachine.getMoneyInTransaction()).toEqual(Cash.None);
       expect(snackMachine.getMoneyInMachine()).toEqual(Money.Dollar());
       expect(snackMachine.getSnackPile(0).quantity).toEqual(9);
     });
@@ -85,10 +82,7 @@ describe(SnackMachine.name, () => {
 
     it("should NOT be able to buy a snack if there is less money in the machine than Snack price", () => {
       const snackMachine = new SnackMachine("1");
-      snackMachine.loadSnacks(
-        0,
-        new SnackPile(new Snack("1", "Snickers"), 1, 10)
-      );
+      snackMachine.loadSnacks(0, new SnackPile(Snack.Chocolate, 1, 10));
       snackMachine.insertMoney(Money.TenCent());
 
       expect(() => snackMachine.buySnack(0)).toThrowError(
@@ -98,10 +92,7 @@ describe(SnackMachine.name, () => {
 
     it("should NOT be able to buy a snack if there is NO possibility to return change", () => {
       const snackMachine = new SnackMachine("1");
-      snackMachine.loadSnacks(
-        0,
-        new SnackPile(new Snack("1", "Snickers"), 1, 10)
-      );
+      snackMachine.loadSnacks(0, new SnackPile(Snack.Chocolate, 1, 10));
       snackMachine.insertMoney(Money.FiveDollar());
 
       expect(() => snackMachine.buySnack(0)).toThrowError(
@@ -111,10 +102,7 @@ describe(SnackMachine.name, () => {
 
     it("should return change when buy a snack", async () => {
       const snackMachine = new SnackMachine("1");
-      await snackMachine.loadSnacks(
-        0,
-        new SnackPile(new Snack("1", "Snickers"), 1, 10)
-      );
+      await snackMachine.loadSnacks(0, new SnackPile(Snack.Chocolate, 1, 10));
       await snackMachine.loadMoney(new Money(5, 5, 5, 5, 5, 5));
 
       snackMachine.insertMoney(Money.FiveDollar());

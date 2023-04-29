@@ -4,6 +4,8 @@ import { Guard } from "../../../../../shared/core/utils/guard";
 import Fraction from "fraction.js";
 
 export class Cash extends ValueObject<Money> {
+  static readonly None: Cash = new Cash(0);
+
   constructor(readonly amount: number) {
     super();
     Guard.againstNegativeNumber(amount, "Amount is negative");
@@ -31,9 +33,5 @@ export class Cash extends ValueObject<Money> {
 
   subtraction(subtrahend: Cash): Cash {
     return new Cash(new Fraction(this.amount).sub(subtrahend.amount).valueOf());
-  }
-
-  static None(): Cash {
-    return new Cash(0);
   }
 }

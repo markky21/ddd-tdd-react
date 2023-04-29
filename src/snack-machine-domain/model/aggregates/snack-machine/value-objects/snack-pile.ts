@@ -3,8 +3,10 @@ import { ValueObject } from "../../../../../shared/core/value-objects/value-obje
 import { Guard } from "../../../../../shared/core/utils/guard";
 
 export class SnackPile extends ValueObject<SnackPile> {
+  static empty = new SnackPile(Snack.None, 0, 0);
+
   constructor(
-    public readonly snack: Snack | null,
+    public readonly snack: Snack = Snack.None,
     public readonly price: number,
     public readonly quantity: number
   ) {
