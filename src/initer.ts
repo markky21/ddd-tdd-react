@@ -1,20 +1,20 @@
-import { SnackMachineController } from "./model/snack-machine/controllers/snack-machine-controller/snack-machine.controller";
-import { IdbService } from "./model/snack-machine/data-access/idb.service";
-import { SnackMachineRepository } from "./model/snack-machine/repositories/snack-machine.repository";
-import { SnackRepository } from "./model/snack-machine/repositories/snack.repository";
-import { EntityId } from "./model/shared/core/entities/entity.abstract";
+import { SnackMachineService } from "./snack-machine-domain/service/snack-machine.service";
+import { IdbService } from "./snack-machine-domain/storage/idb.service";
+import { SnackMachineRepository } from "./snack-machine-domain/repository/snack-machine.repository";
+import { SnackRepository } from "./snack-machine-domain/repository/snack.repository";
+import { EntityId } from "./shared/core/entities/entity.abstract";
 import { nanoid } from "nanoid";
-import { SnackMachineWithPersistence } from "./model/snack-machine/core/aggregates/snack-machine/snack-machine-with-persistence";
-import { Snack } from "./model/snack-machine/core/aggregates/snack/snack";
-import { SnackMap } from "./model/snack-machine/repositories/mappers/snack.map";
+import { SnackMachineWithPersistence } from "./snack-machine-domain/model/aggregates/snack-machine/snack-machine-with-persistence";
+import { Snack } from "./snack-machine-domain/model/aggregates/snack/snack";
+import { SnackMap } from "./snack-machine-domain/repository/mappers/snack.map";
 import {
   Slot,
   SnackMachineSlotsPosition,
-} from "./model/snack-machine/core/aggregates/snack-machine/entities/slot";
-import { SnackPile } from "./model/snack-machine/core/aggregates/snack-machine/value-objects/snack-pile";
-import { Money } from "./model/snack-machine/core/aggregates/snack-machine/value-objects/money";
-import { SnackMachineMap } from "./model/snack-machine/repositories/mappers/snack-machine.map";
-import { SlotMap } from "./model/snack-machine/repositories/mappers/slot.map";
+} from "./snack-machine-domain/model/aggregates/snack-machine/entities/slot";
+import { SnackPile } from "./snack-machine-domain/model/aggregates/snack-machine/value-objects/snack-pile";
+import { Money } from "./snack-machine-domain/model/aggregates/snack-machine/value-objects/money";
+import { SnackMachineMap } from "./snack-machine-domain/repository/mappers/snack-machine.map";
+import { SlotMap } from "./snack-machine-domain/repository/mappers/slot.map";
 
 interface IniterConfig {
   snackMachineId: EntityId;
@@ -25,7 +25,7 @@ export class Initer {
   static async init({
     snackMachineId,
     _db,
-  }: IniterConfig): Promise<SnackMachineController> {
+  }: IniterConfig): Promise<SnackMachineService> {
     const db = _db ?? new IdbService();
     await db.initialize();
 
@@ -38,7 +38,7 @@ export class Initer {
       snackRepository
     );
 
-    const controller = new SnackMachineController(
+    const controller = new SnackMachineService(
       snackMachineRepository,
       snackRepository
     );

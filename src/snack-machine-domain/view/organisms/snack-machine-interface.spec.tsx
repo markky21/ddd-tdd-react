@@ -1,11 +1,11 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { SnackMachineInterface } from "./snack-machine-interface";
-import { SnackMachineController } from "../../model/snack-machine/controllers/snack-machine-controller/snack-machine.controller";
-import { getSnackMachineControllerFixture } from "../../model/snack-machine/controllers/snack-machine-controller/snack-machine.controller.fixture";
+import { SnackMachineService } from "../../service/snack-machine.service";
+import { getSnackMachineServiceFixture } from "../../service/snack-machine.service.fixture";
 
-const getController = async (): Promise<SnackMachineController> => {
-  const { controller } = await getSnackMachineControllerFixture();
-  return controller;
+const getController = async (): Promise<SnackMachineService> => {
+  const { service } = await getSnackMachineServiceFixture();
+  return service;
 };
 
 describe(SnackMachineInterface.name, () => {

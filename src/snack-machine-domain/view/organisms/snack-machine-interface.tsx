@@ -1,10 +1,10 @@
 import { Button } from "../atoms/button";
 import { Card } from "../atoms/card";
 import { useObservableState } from "observable-hooks";
-import { SnackMachineController } from "../../model/snack-machine/controllers/snack-machine-controller/snack-machine.controller";
+import { SnackMachineService } from "../../service/snack-machine.service";
 
 interface SnackMachineInterfaceProps {
-  snackMachine: SnackMachineController;
+  snackMachine: SnackMachineService;
 }
 export function SnackMachineInterface({
   snackMachine,

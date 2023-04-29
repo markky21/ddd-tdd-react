@@ -1,5 +1,5 @@
 import { SnackMachineRepository } from "./snack-machine.repository";
-import { getTestDb, seedTestDb } from "../data-access/idb.service.fixture";
+import { getTestDb, seedTestDb } from "../storage/idb.service.fixture";
 import { SnackRepository } from "./snack.repository";
 import { SnackMachineMap } from "./mappers/snack-machine.map";
 

@@ -1,18 +1,18 @@
 import { Repository } from "../../shared/repositories/repository.abstract";
-import { SnackMachine } from "../core/aggregates/snack-machine/snack-machine";
-import { IdbService } from "../data-access/idb.service";
+import { SnackMachine } from "../model/aggregates/snack-machine/snack-machine";
+import { IdbService } from "../storage/idb.service";
 import { Guard } from "../../shared/core/utils/guard";
 import { SnackMachineMap } from "./mappers/snack-machine.map";
 import { SnackRepository } from "./snack.repository";
 import { EntityId } from "../../shared/core/entities/entity.abstract";
-import { SlotFromDb } from "../data-access/idb.model";
+import { SlotFromDb } from "../storage/idb.model";
 import {
   Slot,
   SnackMachineSlotsPosition,
-} from "../core/aggregates/snack-machine/entities/slot";
+} from "../model/aggregates/snack-machine/entities/slot";
 import { SlotMap } from "./mappers/slot.map";
-import { SnackPile } from "../core/aggregates/snack-machine/value-objects/snack-pile";
-import { SnackMachineWithPersistence } from "../core/aggregates/snack-machine/snack-machine-with-persistence";
+import { SnackPile } from "../model/aggregates/snack-machine/value-objects/snack-pile";
+import { SnackMachineWithPersistence } from "../model/aggregates/snack-machine/snack-machine-with-persistence";
 import { SnackMap } from "./mappers/snack.map";
 
 //NOTE: In Course db was loaded by singleton pattern

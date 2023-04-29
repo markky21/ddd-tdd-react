@@ -1,16 +1,14 @@
 import { Initer } from "./initer";
-import { SnackMachineController } from "./model/snack-machine/controllers/snack-machine-controller/snack-machine.controller";
+import { SnackMachineService } from "./snack-machine-domain/service/snack-machine.service";
 import {
   getTestDb,
   seedTestDb,
-} from "./model/snack-machine/data-access/idb.service.fixture";
+} from "./snack-machine-domain/storage/idb.service.fixture";
 
 describe(Initer.name, () => {
   it("should return controllers", async () => {
     const snackMachineController = await Initer.init({ snackMachineId: "1" });
-    expect(
-      snackMachineController instanceof SnackMachineController
-    ).toBeTruthy();
+    expect(snackMachineController instanceof SnackMachineService).toBeTruthy();
   });
 
   it("should initialize snack machine by given ID", async () => {

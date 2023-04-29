@@ -1,14 +1,14 @@
-import { SnackMachineController } from "./snack-machine.controller";
-import { Money } from "../../core/aggregates/snack-machine/value-objects/money";
-import { getSnackMachineControllerFixture } from "./snack-machine.controller.fixture";
+import { SnackMachineService } from "./snack-machine.service";
+import { Money } from "../model/aggregates/snack-machine/value-objects/money";
+import { getSnackMachineServiceFixture } from "./snack-machine.service.fixture";
 
-describe(SnackMachineController.name, () => {
+describe(SnackMachineService.name, () => {
   describe("initial state", () => {
     it("should initially give information about inserted money", async () => {
       const spy = vi.fn();
-      const { controller } = await getSnackMachineControllerFixture();
+      const { service } = await getSnackMachineServiceFixture();
 
-      const subscription = controller.moneyInserted$.subscribe(spy);
+      const subscription = service.moneyInserted$.subscribe(spy);
       subscription.unsubscribe();
 
       expect(spy).toHaveBeenNthCalledWith(1, "¢0");
@@ -16,9 +16,9 @@ describe(SnackMachineController.name, () => {
 
     it("should initially give information about inserted money in snack machine", async () => {
       const spy = vi.fn();
-      const { controller } = await getSnackMachineControllerFixture();
+      const { service } = await getSnackMachineServiceFixture();
 
-      const subscription = controller.coinsAndNotes$.subscribe(spy);
+      const subscription = service.coinsAndNotes$.subscribe(spy);
       subscription.unsubscribe();
 
       expect(spy).toHaveBeenNthCalledWith(
@@ -29,9 +29,9 @@ describe(SnackMachineController.name, () => {
 
     it("should initially give empty message from snack machine", async () => {
       const spy = vi.fn();
-      const { controller } = await getSnackMachineControllerFixture();
+      const { service } = await getSnackMachineServiceFixture();
 
-      const subscription = controller.message$.subscribe(spy);
+      const subscription = service.message$.subscribe(spy);
       subscription.unsubscribe();
 
       expect(spy).toHaveBeenNthCalledWith(1, "");
@@ -41,15 +41,15 @@ describe(SnackMachineController.name, () => {
   describe("inserting money", () => {
     it("should to insert money into snack machine", async () => {
       const spy = vi.fn();
-      const { controller } = await getSnackMachineControllerFixture();
+      const { service } = await getSnackMachineServiceFixture();
 
-      const subscription = controller.moneyInserted$.subscribe(spy);
-      controller.insertOneCent();
-      controller.insertTenCent();
-      controller.insertQuarter();
-      controller.insertDollar();
-      controller.insertFiveDollar();
-      controller.insertTenDollar();
+      const subscription = service.moneyInserted$.subscribe(spy);
+      service.insertOneCent();
+      service.insertTenCent();
+      service.insertQuarter();
+      service.insertDollar();
+      service.insertFiveDollar();
+      service.insertTenDollar();
       subscription.unsubscribe();
 
       expect(spy).toHaveBeenNthCalledWith(1, "¢0");
@@ -63,15 +63,15 @@ describe(SnackMachineController.name, () => {
 
     it("should return message from snack machine", async () => {
       const spy = vi.fn();
-      const { controller } = await getSnackMachineControllerFixture();
+      const { service } = await getSnackMachineServiceFixture();
 
-      const subscription = controller.message$.subscribe(spy);
-      controller.insertOneCent();
-      controller.insertTenCent();
-      controller.insertQuarter();
-      controller.insertDollar();
-      controller.insertFiveDollar();
-      controller.insertTenDollar();
+      const subscription = service.message$.subscribe(spy);
+      service.insertOneCent();
+      service.insertTenCent();
+      service.insertQuarter();
+      service.insertDollar();
+      service.insertFiveDollar();
+      service.insertTenDollar();
       subscription.unsubscribe();
 
       expect(spy).toHaveBeenNthCalledWith(2, "You inserted ¢1");
@@ -85,13 +85,13 @@ describe(SnackMachineController.name, () => {
     it("should calculate coins and notes inside machine", async () => {
       const spy = vi.fn();
       const {
-        controller,
+        service,
         snackMachineRepositoryFixture: { moneyInMachineInitial },
-      } = await getSnackMachineControllerFixture();
+      } = await getSnackMachineServiceFixture();
 
-      const subscription = controller.coinsAndNotes$.subscribe(spy);
-      controller.insertOneCent();
-      controller.insertTenCent();
+      const subscription = service.coinsAndNotes$.subscribe(spy);
+      service.insertOneCent();
+      service.insertTenCent();
 
       subscription.unsubscribe();
 
@@ -116,12 +116,12 @@ describe(SnackMachineController.name, () => {
   describe("returning money", () => {
     it("should to return money from snack machine", async () => {
       const spy = vi.fn();
-      const { controller } = await getSnackMachineControllerFixture();
+      const { service } = await getSnackMachineServiceFixture();
 
-      const subscription = controller.moneyInserted$.subscribe(spy);
-      controller.insertOneCent();
-      controller.insertTenCent();
-      controller.returnMoney();
+      const subscription = service.moneyInserted$.subscribe(spy);
+      service.insertOneCent();
+      service.insertTenCent();
+      service.returnMoney();
       subscription.unsubscribe();
 
       expect(spy).toHaveBeenNthCalledWith(1, "¢0");
@@ -132,11 +132,11 @@ describe(SnackMachineController.name, () => {
 
     it("should to return message from snack machine", async () => {
       const spy = vi.fn();
-      const { controller } = await getSnackMachineControllerFixture();
+      const { service } = await getSnackMachineServiceFixture();
 
-      const subscription = controller.message$.subscribe(spy);
-      controller.insertOneCent();
-      controller.returnMoney();
+      const subscription = service.message$.subscribe(spy);
+      service.insertOneCent();
+      service.returnMoney();
       subscription.unsubscribe();
 
       expect(spy).toHaveBeenNthCalledWith(3, "Money returned");
@@ -145,14 +145,14 @@ describe(SnackMachineController.name, () => {
     it("should calculate coins and notes inside machine", async () => {
       const spy = vi.fn();
       const {
-        controller,
+        service,
         snackMachineRepositoryFixture: { moneyInMachineInitial },
-      } = await getSnackMachineControllerFixture();
+      } = await getSnackMachineServiceFixture();
 
-      const subscription = controller.coinsAndNotes$.subscribe(spy);
-      controller.insertOneCent();
-      controller.insertTenCent();
-      controller.returnMoney();
+      const subscription = service.coinsAndNotes$.subscribe(spy);
+      service.insertOneCent();
+      service.insertTenCent();
+      service.returnMoney();
 
       subscription.unsubscribe();
 
@@ -170,11 +170,11 @@ describe(SnackMachineController.name, () => {
   describe("buying snack", () => {
     it("should to buy from snack machine", async () => {
       const spy = vi.fn();
-      const { controller } = await getSnackMachineControllerFixture();
+      const { service } = await getSnackMachineServiceFixture();
 
-      const subscription = controller.moneyInserted$.subscribe(spy);
-      controller.insertDollar();
-      await controller.buySnack(0);
+      const subscription = service.moneyInserted$.subscribe(spy);
+      service.insertDollar();
+      await service.buySnack(0);
       subscription.unsubscribe();
 
       expect(spy).toHaveBeenNthCalledWith(2, "$1.00");
@@ -183,11 +183,11 @@ describe(SnackMachineController.name, () => {
 
     it("should to return message from snack machine", async () => {
       const spy = vi.fn();
-      const { controller } = await getSnackMachineControllerFixture();
+      const { service } = await getSnackMachineServiceFixture();
 
-      const subscription = controller.message$.subscribe(spy);
-      controller.insertDollar();
-      await controller.buySnack(0);
+      const subscription = service.message$.subscribe(spy);
+      service.insertDollar();
+      await service.buySnack(0);
       subscription.unsubscribe();
 
       expect(spy).toHaveBeenNthCalledWith(3, "You have bought a snack");
@@ -195,13 +195,13 @@ describe(SnackMachineController.name, () => {
 
     it("should calculate coins and notes inside machine", async () => {
       const spy = vi.fn();
-      const { controller } = await getSnackMachineControllerFixture();
+      const { service } = await getSnackMachineServiceFixture();
 
-      const subscription = controller.coinsAndNotes$.subscribe(spy);
-      controller.insertDollar();
-      await controller.buySnack(0);
-      controller.insertFiveDollar();
-      await controller.buySnack(0);
+      const subscription = service.coinsAndNotes$.subscribe(spy);
+      service.insertDollar();
+      await service.buySnack(0);
+      service.insertFiveDollar();
+      await service.buySnack(0);
 
       subscription.unsubscribe();
 

@@ -1,15 +1,15 @@
-import { Money } from "../../core/aggregates/snack-machine/value-objects/money";
+import { Money } from "../model/aggregates/snack-machine/value-objects/money";
 import { BehaviorSubject, map, ReplaySubject } from "rxjs";
-import { SnackMachineWithPersistence } from "../../core/aggregates/snack-machine/snack-machine-with-persistence";
-import { SnackMachineSlotsPosition } from "../../core/aggregates/snack-machine/entities/slot";
-import { Cash } from "../../core/aggregates/snack-machine/value-objects/cash";
-import { SnackMachineRepository } from "../../repositories/snack-machine.repository";
-import { SnackRepository } from "../../repositories/snack.repository";
-import { EntityId } from "../../../shared/core/entities/entity.abstract";
-import { SnackMachine } from "../../core/aggregates/snack-machine/snack-machine";
-import { Guard } from "../../../shared/core/utils/guard";
+import { SnackMachineWithPersistence } from "../model/aggregates/snack-machine/snack-machine-with-persistence";
+import { SnackMachineSlotsPosition } from "../model/aggregates/snack-machine/entities/slot";
+import { Cash } from "../model/aggregates/snack-machine/value-objects/cash";
+import { SnackMachineRepository } from "../repository/snack-machine.repository";
+import { SnackRepository } from "../repository/snack.repository";
+import { EntityId } from "../../shared/core/entities/entity.abstract";
+import { SnackMachine } from "../model/aggregates/snack-machine/snack-machine";
+import { Guard } from "../../shared/core/utils/guard";
 
-export class SnackMachineController {
+export class SnackMachineService {
   private readonly _moneyInserted$ = new ReplaySubject<Cash>();
   private readonly _moneyInMachine$ = new ReplaySubject<Money>();
   private snackMachine: SnackMachineWithPersistence | null = null;
@@ -65,9 +65,7 @@ export class SnackMachineController {
 
   public async buySnack(position: SnackMachineSlotsPosition): Promise<void> {
     this.guardIsSnackMachine();
-    if (
-      !SnackMachineController.assertSnackMachineIsInitialized(this.snackMachine)
-    )
+    if (!SnackMachineService.assertSnackMachineIsInitialized(this.snackMachine))
       return;
 
     await this.snackMachine.buySnack(position);
@@ -79,9 +77,7 @@ export class SnackMachineController {
 
   public returnMoney(): void {
     this.guardIsSnackMachine();
-    if (
-      !SnackMachineController.assertSnackMachineIsInitialized(this.snackMachine)
-    )
+    if (!SnackMachineService.assertSnackMachineIsInitialized(this.snackMachine))
       return;
 
     this.snackMachine.returnMoney();
@@ -93,9 +89,7 @@ export class SnackMachineController {
 
   private insertMoney(coinOrNode: Money): void {
     this.guardIsSnackMachine();
-    if (
-      !SnackMachineController.assertSnackMachineIsInitialized(this.snackMachine)
-    )
+    if (!SnackMachineService.assertSnackMachineIsInitialized(this.snackMachine))
       return;
 
     this.snackMachine.insertMoney(coinOrNode);

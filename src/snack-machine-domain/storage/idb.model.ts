@@ -1,6 +1,6 @@
-import { CoinsAndNotes } from "../core/aggregates/snack-machine/value-objects/money";
+import { CoinsAndNotes } from "../model/aggregates/snack-machine/value-objects/money";
 import { EntityId } from "../../shared/core/entities/entity.abstract";
-import { SnackMachineSlotsPosition } from "../core/aggregates/snack-machine/entities/slot";
+import { SnackMachineSlotsPosition } from "../model/aggregates/snack-machine/entities/slot";
 
 export interface SnackMachineFromDb {
   moneyInMachine: CoinsAndNotes;

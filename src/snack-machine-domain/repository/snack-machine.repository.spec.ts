@@ -1,8 +1,8 @@
 /* eslint-disable testing-library/no-await-sync-query */
 import { SnackMachineRepository } from "./snack-machine.repository";
-import { Snack } from "../core/aggregates/snack/snack";
-import { SnackPile } from "../core/aggregates/snack-machine/value-objects/snack-pile";
-import { Money } from "../core/aggregates/snack-machine/value-objects/money";
+import { Snack } from "../model/aggregates/snack/snack";
+import { SnackPile } from "../model/aggregates/snack-machine/value-objects/snack-pile";
+import { Money } from "../model/aggregates/snack-machine/value-objects/money";
 import { getSnackMachineRepositoryFixture } from "./snack-machine.repository.fixtures";
 
 describe(SnackMachineRepository.name, () => {

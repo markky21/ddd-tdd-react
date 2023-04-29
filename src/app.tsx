@@ -5,11 +5,11 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
-import { SnackMachineInterface } from "./view/organisms/snack-machine-interface";
-import { SnackMachineController } from "./model/snack-machine/controllers/snack-machine-controller/snack-machine.controller";
+import { SnackMachineInterface } from "./snack-machine-domain/view/organisms/snack-machine-interface";
+import { SnackMachineService } from "./snack-machine-domain/service/snack-machine.service";
 
 interface AppProps {
-  snackMachine: SnackMachineController;
+  snackMachine: SnackMachineService;
 }
 
 export function App({ snackMachine }: AppProps) {

@@ -1,7 +1,7 @@
 import { Repository } from "../../shared/repositories/repository.abstract";
-import { IdbService } from "../data-access/idb.service";
+import { IdbService } from "../storage/idb.service";
 import { Guard } from "../../shared/core/utils/guard";
-import { Snack } from "../core/aggregates/snack/snack";
+import { Snack } from "../model/aggregates/snack/snack";
 import { SnackMap } from "./mappers/snack.map";
 import { EntityId } from "../../shared/core/entities/entity.abstract";
 

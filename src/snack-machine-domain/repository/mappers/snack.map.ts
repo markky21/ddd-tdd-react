@@ -1,5 +1,5 @@
-import { SnackFromDb } from "../../data-access/idb.model";
-import { Snack } from "../../core/aggregates/snack/snack";
+import { SnackFromDb } from "../../storage/idb.model";
+import { Snack } from "../../model/aggregates/snack/snack";
 
 export class SnackMap {
   public static toDomain(id: string, snackDB: SnackFromDb): Snack {

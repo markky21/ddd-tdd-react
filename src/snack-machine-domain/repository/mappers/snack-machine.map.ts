@@ -1,7 +1,7 @@
-import { SnackMachine } from "../../core/aggregates/snack-machine/snack-machine";
-import { SnackMachineFromDb } from "../../data-access/idb.model";
-import { Money } from "../../core/aggregates/snack-machine/value-objects/money";
-import { SnackMachineWithPersistence } from "../../core/aggregates/snack-machine/snack-machine-with-persistence";
+import { SnackMachine } from "../../model/aggregates/snack-machine/snack-machine";
+import { SnackMachineFromDb } from "../../storage/idb.model";
+import { Money } from "../../model/aggregates/snack-machine/value-objects/money";
+import { SnackMachineWithPersistence } from "../../model/aggregates/snack-machine/snack-machine-with-persistence";
 
 export class SnackMachineMap {
   public static toDomain(

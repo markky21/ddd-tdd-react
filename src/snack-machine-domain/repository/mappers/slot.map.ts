@@ -1,5 +1,5 @@
-import { SlotFromDb } from "../../data-access/idb.model";
-import { Slot } from "../../core/aggregates/snack-machine/entities/slot";
+import { SlotFromDb } from "../../storage/idb.model";
+import { Slot } from "../../model/aggregates/snack-machine/entities/slot";
 
 export class SlotMap {
   public static toDomain(slotFromDb: SlotFromDb): Slot {
