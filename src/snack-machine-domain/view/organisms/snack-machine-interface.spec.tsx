@@ -82,27 +82,27 @@ describe(SnackMachineInterface.name, () => {
 
     await waitFor(() =>
       expect(screen.getByTestId("moneyInside")).toHaveTextContent(
-        "Money inside: ¢1: 10¢10: 10¢25: 10$1: 10$5: 10$10: 10"
+        "Money inside: $163.60¢1: 10¢10: 10¢25: 10$1: 10$5: 10$10: 10"
       )
     );
 
     fireEvent.click(screen.getByText("Put $10"));
     await waitFor(() =>
       expect(screen.getByTestId("moneyInside")).toHaveTextContent(
-        "Money inside: ¢1: 10¢10: 10¢25: 10$1: 10$5: 10$10: 11"
+        "$173.60¢1: 10¢10: 10¢25: 10$1: 10$5: 10$10: 11"
       )
     );
 
     fireEvent.click(screen.getByText("Buy a snack 1"));
     await waitFor(() =>
       expect(screen.getByTestId("moneyInside")).toHaveTextContent(
-        "Money inside: ¢1: 10¢10: 10¢25: 10$1: 6$5: 9$10: 11"
+        "Money inside: $164.60¢1: 10¢10: 10¢25: 10$1: 6$5: 9$10: 11"
       )
     );
 
     fireEvent.click(screen.getByText("Put $5"));
     expect(screen.getByTestId("moneyInside")).toHaveTextContent(
-      "Money inside: ¢1: 10¢10: 10¢25: 10$1: 6$5: 10$10: 11"
+      "Money inside: $169.60¢1: 10¢10: 10¢25: 10$1: 6$5: 10$10: 11"
     );
   });
 });

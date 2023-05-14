@@ -1,13 +1,9 @@
-import { SnackMachine, SnackMachineSlots } from "./snack-machine";
+import { SnackMachine } from "./snack-machine";
 import { Slot, SnackMachineSlotsPosition } from "./entities/slot";
 
 export class SnackMachineWithPersistence extends SnackMachine {
   _setSlot(position: SnackMachineSlotsPosition, slot: Slot): void {
     this.slots[position] = slot;
-  }
-
-  _getSlots(): SnackMachineSlots {
-    return this.slots;
   }
 
   _setSlotsIds(slotsIds: string[]): void {

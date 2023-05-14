@@ -34,6 +34,10 @@ export class SnackMachine extends AggregateRoot {
     return this.slots.map((slot) => slot.id);
   }
 
+  getSlots(): SnackMachineSlots {
+    return this.slots;
+  }
+
   insertMoney(amount: Money): void {
     Guard.againstTruthy(
       ![
@@ -53,11 +57,11 @@ export class SnackMachine extends AggregateRoot {
     this.moneyInMachine = this.moneyInMachine.add(amount);
   }
 
-  returnMoney(): Money {
-    return this.finalizeTransaction(this.moneyInTransaction);
+  returnMoney(): void {
+    this.finalizeTransaction(this.moneyInTransaction);
   }
 
-  buySnack(position: SnackMachineSlotsPosition): Money {
+  buySnack(position: SnackMachineSlotsPosition): void {
     const snackPile = this.slots[position].snackPile;
     Guard.againstTruthy(snackPile.isEmpty(), "There is no snack in the slot");
     Guard.againstTruthy(
@@ -68,9 +72,8 @@ export class SnackMachine extends AggregateRoot {
     const cashToReturn = this.moneyInTransaction.subtraction(
       new Cash(snackPile.price)
     );
-    const moneyToReturn = this.finalizeTransaction(cashToReturn);
+    this.finalizeTransaction(cashToReturn);
     this.slots[position].snackPile = snackPile.decreaseQuantity();
-    return moneyToReturn;
   }
 
   loadSnacks(position: SnackMachineSlotsPosition, snackPile: SnackPile): void {
@@ -81,10 +84,9 @@ export class SnackMachine extends AggregateRoot {
     this.moneyInMachine = this.moneyInMachine.add(money);
   }
 
-  private finalizeTransaction(cash: Cash): Money {
+  private finalizeTransaction(cash: Cash): void {
     const moneyToReturn = this.moneyInMachine.allocate(cash);
     this.moneyInMachine = this.moneyInMachine.subtraction(moneyToReturn);
     this.moneyInTransaction = Cash.None;
-    return moneyToReturn;
   }
 }

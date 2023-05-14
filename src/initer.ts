@@ -52,13 +52,17 @@ export class Initer {
     const snackMachineToSave = new SnackMachineWithPersistence(snackMachineId);
 
     const snackPosition: SnackMachineSlotsPosition = 0;
-    const snackPile0 = new SnackPile(Snack.Chocolate, 1, 10);
+    const snackPile0 = new SnackPile(Snack.Chocolate, 3, 10);
+    const snackPile1 = new SnackPile(Snack.Soda, 2, 15);
+    const snackPile2 = new SnackPile(Snack.Gum, 1, 20);
 
     const slot0 = new Slot(nanoid(), snackMachineId, 0);
     const slot1 = new Slot(nanoid(), snackMachineId, 1);
     const slot2 = new Slot(nanoid(), snackMachineId, 2);
 
     slot0.loadSnackPile(snackPile0);
+    slot1.loadSnackPile(snackPile1);
+    slot2.loadSnackPile(snackPile2);
 
     snackMachineToSave.loadSnacks(snackPosition, snackPile0);
     snackMachineToSave.loadMoney(new Money(10, 10, 10, 10, 10, 10));

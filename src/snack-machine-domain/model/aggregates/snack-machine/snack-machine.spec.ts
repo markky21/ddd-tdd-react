@@ -32,8 +32,8 @@ describe(SnackMachine.name, () => {
       snackMachine.insertMoney(Money.TenCent());
       snackMachine.insertMoney(Money.FiveDollar());
       snackMachine.insertMoney(Money.FiveDollar());
+      snackMachine.returnMoney();
 
-      expect(snackMachine.returnMoney()).toEqual(new Money(1, 2, 0, 0, 0, 1));
       expect(snackMachine.getMoneyInTransaction()).toEqual(Cash.None);
     });
   });
@@ -98,17 +98,6 @@ describe(SnackMachine.name, () => {
       expect(() => snackMachine.buySnack(0)).toThrowError(
         "Not enough money to allocate"
       );
-    });
-
-    it("should return change when buy a snack", async () => {
-      const snackMachine = new SnackMachine("1");
-      await snackMachine.loadSnacks(0, new SnackPile(Snack.Chocolate, 1, 10));
-      await snackMachine.loadMoney(new Money(5, 5, 5, 5, 5, 5));
-
-      snackMachine.insertMoney(Money.FiveDollar());
-      const returnedMoney = snackMachine.buySnack(0);
-
-      expect(returnedMoney).toEqual(new Money(0, 0, 0, 4));
     });
   });
 });

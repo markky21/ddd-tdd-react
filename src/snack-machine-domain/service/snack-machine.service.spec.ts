@@ -1,6 +1,8 @@
 import { SnackMachineService } from "./snack-machine.service";
 import { Money } from "../model/aggregates/snack-machine/value-objects/money";
 import { getSnackMachineServiceFixture } from "./snack-machine.service.fixture";
+import { Cash } from "../model/aggregates/snack-machine/value-objects/cash";
+import { describe } from "vitest";
 
 describe(SnackMachineService.name, () => {
   describe("initial state", () => {
@@ -109,6 +111,55 @@ describe(SnackMachineService.name, () => {
           .add(Money.OneCent())
           .add(Money.TenCent())
           .getCoinsAndNotes()
+      );
+    });
+  });
+
+  describe("slots", () => {
+    it("should update state after snack purchase", async () => {
+      const spy = vi.fn();
+      const { service } = await getSnackMachineServiceFixture();
+
+      const subscription = service.snacks$.subscribe(spy);
+      service.insertDollar();
+      await service.buySnack(0);
+      subscription.unsubscribe();
+
+      expect(spy.mock.calls[0]).toEqual([
+        [
+          { position: 0, price: "$1.00", quantity: 10, name: "Chocolate" },
+          { position: 1, price: "¢0", quantity: 0, name: "None" },
+          { position: 2, price: "¢0", quantity: 0, name: "None" },
+        ],
+      ]);
+      expect(spy.mock.calls[1]).toEqual([
+        [
+          { position: 0, price: "$1.00", quantity: 9, name: "Chocolate" },
+          { position: 1, price: "¢0", quantity: 0, name: "None" },
+          { position: 2, price: "¢0", quantity: 0, name: "None" },
+        ],
+      ]);
+    });
+  });
+
+  describe("total money inside machine", () => {
+    it("should be returned", async () => {
+      const spy = vi.fn();
+      const {
+        service,
+        snackMachineRepositoryFixture: { moneyInMachineInitial },
+      } = await getSnackMachineServiceFixture();
+      const initialCash = new Cash(moneyInMachineInitial.getTotalAmount());
+
+      const subscription = service.moneyInMachine$.subscribe(spy);
+      service.insertOneCent();
+
+      subscription.unsubscribe();
+
+      expect(spy).toHaveBeenNthCalledWith(1, initialCash.toView());
+      expect(spy).toHaveBeenNthCalledWith(
+        2,
+        initialCash.add(new Cash(0.01)).toView()
       );
     });
   });

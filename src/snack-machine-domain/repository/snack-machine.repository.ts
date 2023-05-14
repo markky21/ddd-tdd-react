@@ -42,7 +42,7 @@ export class SnackMachineRepository extends Repository<SnackMachine> {
   async saveOrUpdate(
     aggregateRoot: SnackMachineWithPersistence
   ): Promise<EntityId> {
-    for await (let slot of aggregateRoot._getSlots()) {
+    for await (let slot of aggregateRoot.getSlots()) {
       if (slot.snackPile.snack?.id) {
         await this.db.putSnackById(
           slot.snackPile.snack?.id,
