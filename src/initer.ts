@@ -17,38 +17,31 @@ import { SlotMap } from "./snack-machine-domain/repository/mappers/slot.map";
 
 interface IniterConfig {
   snackMachineId: EntityId;
-  _db?: IdbService;
   createIfNotExists?: boolean;
 }
 export class Initer {
+  private static db = IdbService.getInstance();
+  private static snackRepository = SnackRepository.getInstance();
+  private static snackMachineRepository = SnackMachineRepository.getInstance();
+
   static async init({
     snackMachineId,
-    _db,
   }: IniterConfig): Promise<SnackMachineService> {
-    const db = _db ?? new IdbService();
-    await db.initialize();
+    await this.db.initialize();
 
-    if (!(await db.getSnackMachineById(snackMachineId))) {
-      await Initer.createSnackMachine(snackMachineId, db);
+    if (!(await this.db.getSnackMachineById(snackMachineId))) {
+      await Initer.createSnackMachine(snackMachineId);
     }
-    const snackRepository = new SnackRepository(db);
-    const snackMachineRepository = new SnackMachineRepository(
-      db,
-      snackRepository
-    );
 
     const controller = new SnackMachineService(
-      snackMachineRepository,
-      snackRepository
+      this.snackMachineRepository,
+      this.snackRepository
     );
     await controller.initializeSnackMachine(snackMachineId);
     return controller;
   }
 
-  private static async createSnackMachine(
-    snackMachineId: EntityId,
-    db: IdbService
-  ) {
+  private static async createSnackMachine(snackMachineId: EntityId) {
     const snackMachineToSave = new SnackMachineWithPersistence(snackMachineId);
 
     const snackPosition: SnackMachineSlotsPosition = 0;
@@ -70,13 +63,13 @@ export class Initer {
     snackMachineToSave._setSlot(1, slot1);
     snackMachineToSave._setSlot(2, slot2);
 
-    await db.putSnackMachineById(
+    await this.db.putSnackMachineById(
       snackMachineId,
       SnackMachineMap.toPersistence(snackMachineToSave)
     );
 
-    await db.putSlotById(slot0.id, SlotMap.toPersistence(slot0));
-    await db.putSlotById(slot1.id, SlotMap.toPersistence(slot1));
-    await db.putSlotById(slot2.id, SlotMap.toPersistence(slot2));
+    await this.db.putSlotById(slot0.id, SlotMap.toPersistence(slot0));
+    await this.db.putSlotById(slot1.id, SlotMap.toPersistence(slot1));
+    await this.db.putSlotById(slot2.id, SlotMap.toPersistence(slot2));
   }
 }

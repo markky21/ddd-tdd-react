@@ -18,12 +18,21 @@ interface MyDB extends DBSchema {
 }
 
 export class IdbService {
+  private static instance: IdbService;
+
   private db: IDBPDatabase<MyDB> = {} as IDBPDatabase<MyDB>;
 
-  constructor(
+  private constructor(
     private dbName: string = "ddd-snack-machine",
     private version: number = 1
   ) {}
+
+  public static getInstance(): IdbService {
+    if (!IdbService.instance) {
+      IdbService.instance = new IdbService();
+    }
+    return IdbService.instance;
+  }
 
   public async initialize(): Promise<IDBPDatabase<MyDB>> {
     this.db = await openDB<MyDB>(this.dbName, this.version, {

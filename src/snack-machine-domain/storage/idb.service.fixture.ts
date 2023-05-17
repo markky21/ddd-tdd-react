@@ -4,10 +4,8 @@ import { SlotFromDb, SnackFromDb, SnackMachineFromDb } from "./idb.model";
 import { Snack } from "../model/aggregates/snack/snack";
 import { SnackMap } from "../repository/mappers/snack.map";
 
-export async function getTestDb(
-  dBName: string = nanoid()
-): Promise<IdbService> {
-  const db = new IdbService(dBName);
+export async function getTestDb(): Promise<IdbService> {
+  const db = IdbService.getInstance();
   await db.initialize();
   return db;
 }

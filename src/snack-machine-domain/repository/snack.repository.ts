@@ -6,9 +6,18 @@ import { SnackMap } from "./mappers/snack.map";
 import { EntityId } from "../../shared/core/entities/entity.abstract";
 
 export class SnackRepository extends Repository<Snack> {
-  constructor(private db: IdbService) {
+  private static instance: SnackRepository;
+
+  private constructor(private db = IdbService.getInstance()) {
     super();
     this.initializeReferenceSnacks();
+  }
+
+  public static getInstance(): SnackRepository {
+    if (!SnackRepository.instance) {
+      SnackRepository.instance = new SnackRepository();
+    }
+    return SnackRepository.instance;
   }
 
   private async initializeReferenceSnacks() {
@@ -19,7 +28,7 @@ export class SnackRepository extends Repository<Snack> {
   }
 
   async getById(id: string): Promise<Snack> {
-    const snackTableValues = await this.db.getSnackById(id);
+    const snackTableValues = await IdbService.getInstance().getSnackById(id);
     Guard.againstTruthy(!snackTableValues, "Snack not found");
     return SnackMap.toDomain(id);
   }

@@ -5,7 +5,7 @@ export const getSnackRepositoryFixture = async () => {
   const db = await getTestDb();
   const dbFixture = await seedTestDb(db);
 
-  const snackRepository = new SnackRepository(db);
+  const snackRepository = SnackRepository.getInstance();
 
   return {
     db,

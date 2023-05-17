@@ -16,14 +16,21 @@ import { SnackMachineWithPersistence } from "../model/aggregates/snack-machine/s
 import { SnackMap } from "./mappers/snack.map";
 import { Snack } from "../model/aggregates/snack/snack";
 
-//NOTE: In Course db was loaded by singleton pattern
-//      probably it's better to use singleton Pattern  for snackRepository
 export class SnackMachineRepository extends Repository<SnackMachine> {
+  private static instance: SnackMachineRepository;
+
   constructor(
-    private db: IdbService,
-    private snackRepository: SnackRepository
+    private db = IdbService.getInstance(),
+    private snackRepository = SnackRepository.getInstance()
   ) {
     super();
+  }
+
+  public static getInstance(): SnackMachineRepository {
+    if (!SnackMachineRepository.instance) {
+      SnackMachineRepository.instance = new SnackMachineRepository();
+    }
+    return SnackMachineRepository.instance;
   }
 
   async getById(id: string): Promise<SnackMachineWithPersistence> {

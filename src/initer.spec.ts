@@ -17,7 +17,6 @@ describe(Initer.name, () => {
 
     const snackMachineController = await Initer.init({
       snackMachineId,
-      _db: db,
     });
     const snackMachine = snackMachineController.snackMachineId;
     expect(snackMachine).toEqual(snackMachineId);
