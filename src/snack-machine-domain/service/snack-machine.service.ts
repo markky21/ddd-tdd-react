@@ -4,7 +4,6 @@ import { SnackMachineWithPersistence } from "../model/aggregates/snack-machine/s
 import { SnackMachineSlotsPosition } from "../model/aggregates/snack-machine/entities/slot";
 import { Cash } from "../model/aggregates/snack-machine/value-objects/cash";
 import { SnackMachineRepository } from "../repository/snack-machine.repository";
-import { SnackRepository } from "../repository/snack.repository";
 import { EntityId } from "../../shared/core/entities/entity.abstract";
 import {
   SnackMachine,
@@ -42,8 +41,7 @@ export class SnackMachineService {
   }
 
   constructor(
-    private readonly snackMachineRepository: SnackMachineRepository,
-    private readonly snackRepository: SnackRepository
+    private readonly snackMachineRepository: SnackMachineRepository
   ) {}
 
   public async initializeSnackMachine(snackMachineId: EntityId): Promise<void> {
@@ -81,9 +79,15 @@ export class SnackMachineService {
     this.guardIsSnackMachine();
     if (
       !SnackMachineService.assertSnackMachineIsInitialized(this.#snackMachine)
-    )
+    ) {
       return;
+    }
 
+    const canBuySnack = this.#snackMachine.canBuySnack(position);
+    if (canBuySnack !== true) {
+      this.message$.next(canBuySnack);
+      return;
+    }
     await this.#snackMachine.buySnack(position);
     await this.snackMachineRepository.saveOrUpdate(this.#snackMachine);
     this.#moneyInserted$.next(this.#snackMachine.getMoneyInTransaction());

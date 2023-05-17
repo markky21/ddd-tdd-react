@@ -3,6 +3,7 @@ import { Money } from "./value-objects/money";
 import { Snack } from "../snack/snack";
 import { SnackPile } from "./value-objects/snack-pile";
 import { Cash } from "./value-objects/cash";
+import { expect } from "vitest";
 
 describe(SnackMachine.name, () => {
   describe("insertMoney", () => {
@@ -96,6 +97,45 @@ describe(SnackMachine.name, () => {
       snackMachine.insertMoney(Money.FiveDollar());
 
       expect(() => snackMachine.buySnack(0)).toThrowError(
+        "Not enough money to allocate"
+      );
+    });
+  });
+
+  describe("canBuySnack", () => {
+    it("should be able to buy a snack", () => {
+      const snackMachine = new SnackMachine("1");
+      snackMachine.loadSnacks(0, new SnackPile(Snack.Chocolate, 1, 10));
+      snackMachine.insertMoney(Money.Dollar());
+
+      expect(snackMachine.canBuySnack(0)).toEqual(true);
+    });
+
+    it("should NOT be able to buy a snack if the slot is empty", () => {
+      const snackMachine = new SnackMachine("1");
+      snackMachine.insertMoney(Money.Dollar());
+
+      expect(snackMachine.canBuySnack(0)).toEqual(
+        "There is no snack in the slot"
+      );
+    });
+
+    it("should NOT be able to buy a snack if there is less money in the machine than Snack price", () => {
+      const snackMachine = new SnackMachine("1");
+      snackMachine.loadSnacks(0, new SnackPile(Snack.Chocolate, 1, 10));
+      snackMachine.insertMoney(Money.TenCent());
+
+      expect(snackMachine.canBuySnack(0)).toEqual(
+        "Not enough money to buy the snack"
+      );
+    });
+
+    it("should NOT be able to buy a snack if there is NO possibility to return change", () => {
+      const snackMachine = new SnackMachine("1");
+      snackMachine.loadSnacks(0, new SnackPile(Snack.Chocolate, 1, 10));
+      snackMachine.insertMoney(Money.FiveDollar());
+
+      expect(snackMachine.canBuySnack(0)).toEqual(
         "Not enough money to allocate"
       );
     });

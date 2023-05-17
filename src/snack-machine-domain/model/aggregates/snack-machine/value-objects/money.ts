@@ -132,7 +132,19 @@ export class Money extends ValueObject<Money> {
     return new Cash(this.getTotalAmount()).toView();
   }
 
+  canAllocate(cash: Cash): boolean {
+    const money = this.allocateCore(cash);
+    return money.getTotalAmount() === cash.amount;
+  }
+
   allocate(cash: Cash): Money {
+    if (!this.canAllocate(cash)) {
+      Guard.againstTruthy(true, "Not enough money to allocate");
+    }
+    return this.allocateCore(cash);
+  }
+
+  private allocateCore(cash: Cash): Money {
     let cashLeft: Cash;
     const tenDollarCount = Math.min(
       this._tenDollarCount,
@@ -168,9 +180,6 @@ export class Money extends ValueObject<Money> {
       this._oneCentCount,
       Math.floor(cashLeft.amount / 0.01)
     );
-    cashLeft = cashLeft.subtraction(new Cash(oneCentCount * 0.01));
-
-    Guard.againstTruthy(cashLeft.amount !== 0, "Not enough money to allocate");
 
     return new Money(
       oneCentCount,

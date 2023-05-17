@@ -33,10 +33,7 @@ export class Initer {
       await Initer.createSnackMachine(snackMachineId);
     }
 
-    const controller = new SnackMachineService(
-      this.snackMachineRepository,
-      this.snackRepository
-    );
+    const controller = new SnackMachineService(this.snackMachineRepository);
     await controller.initializeSnackMachine(snackMachineId);
     return controller;
   }

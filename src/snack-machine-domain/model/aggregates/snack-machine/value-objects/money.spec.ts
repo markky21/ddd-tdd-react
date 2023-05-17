@@ -195,4 +195,18 @@ describe(Money.name, () => {
       );
     });
   });
+
+  describe("canAllocate", () => {
+    it("should return TRUE if valid", () => {
+      const allocated = Money.Dollar().canAllocate(new Cash(1));
+
+      expect(allocated).toEqual(true);
+    });
+
+    it("should return FALSE if not enough money to allocate", () => {
+      const money = new Money(0, 5, 5, 0, 5, 1);
+
+      expect(money.canAllocate(new Cash(26.48))).toEqual(false);
+    });
+  });
 });

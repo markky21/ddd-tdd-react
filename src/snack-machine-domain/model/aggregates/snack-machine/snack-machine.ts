@@ -61,19 +61,33 @@ export class SnackMachine extends AggregateRoot {
     this.finalizeTransaction(this.moneyInTransaction);
   }
 
-  buySnack(position: SnackMachineSlotsPosition): void {
+  canBuySnack(position: SnackMachineSlotsPosition): string | true {
     const snackPile = this.slots[position].snackPile;
-    Guard.againstTruthy(snackPile.isEmpty(), "There is no snack in the slot");
-    Guard.againstTruthy(
-      snackPile.price > this.moneyInTransaction.amount,
-      "Not enough money to buy the snack"
-    );
+    if (snackPile.isEmpty()) {
+      return "There is no snack in the slot";
+    }
 
-    const cashToReturn = this.moneyInTransaction.subtraction(
-      new Cash(snackPile.price)
-    );
-    this.finalizeTransaction(cashToReturn);
-    this.slots[position].snackPile = snackPile.decreaseQuantity();
+    if (snackPile.price > this.moneyInTransaction.amount) {
+      return "Not enough money to buy the snack";
+    }
+
+    if (
+      !this.moneyInMachine.canAllocate(
+        this.moneyInTransaction.subtraction(new Cash(snackPile.price))
+      )
+    ) {
+      return "Not enough money to allocate";
+    }
+
+    return true;
+  }
+
+  buySnack(position: SnackMachineSlotsPosition): void {
+    const canBuySnack = this.canBuySnack(position);
+    if (canBuySnack !== true) {
+      Guard.againstTruthy(true, canBuySnack);
+    }
+    this.buySnackCore(position);
   }
 
   loadSnacks(position: SnackMachineSlotsPosition, snackPile: SnackPile): void {
@@ -82,6 +96,15 @@ export class SnackMachine extends AggregateRoot {
 
   loadMoney(money: Money): void {
     this.moneyInMachine = this.moneyInMachine.add(money);
+  }
+
+  private buySnackCore(position: SnackMachineSlotsPosition): void {
+    const snackPile = this.slots[position].snackPile;
+    const cashToReturn = this.moneyInTransaction.subtraction(
+      new Cash(snackPile.price)
+    );
+    this.finalizeTransaction(cashToReturn);
+    this.slots[position].snackPile = snackPile.decreaseQuantity();
   }
 
   private finalizeTransaction(cash: Cash): void {

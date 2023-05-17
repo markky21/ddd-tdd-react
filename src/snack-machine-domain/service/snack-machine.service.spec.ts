@@ -260,5 +260,29 @@ describe(SnackMachineService.name, () => {
         new Money(10, 10, 10, 7, 11, 10).getCoinsAndNotes()
       );
     });
+
+    it("should show message when snack is not available", async () => {
+      const spy = vi.fn();
+      const { service } = await getSnackMachineServiceFixture();
+
+      const subscription = service.message$.subscribe(spy);
+      service.insertDollar();
+      await service.buySnack(1);
+      subscription.unsubscribe();
+
+      expect(spy).toHaveBeenLastCalledWith("There is no snack in the slot");
+    });
+
+    it("should show message if there is not enough money", async () => {
+      const spy = vi.fn();
+      const { service } = await getSnackMachineServiceFixture();
+
+      const subscription = service.message$.subscribe(spy);
+      service.insertOneCent();
+      await service.buySnack(0);
+      subscription.unsubscribe();
+
+      expect(spy).toHaveBeenLastCalledWith("Not enough money to buy the snack");
+    });
   });
 });

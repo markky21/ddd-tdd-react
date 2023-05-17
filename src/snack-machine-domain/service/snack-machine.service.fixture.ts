@@ -6,8 +6,7 @@ export const getSnackMachineServiceFixture = async () => {
     await getSnackMachineRepositoryFixture();
 
   const service = new SnackMachineService(
-    snackMachineRepositoryFixture.snackMachineRepository,
-    snackMachineRepositoryFixture.snackRepository
+    snackMachineRepositoryFixture.snackMachineRepository
   );
 
   await service.initializeSnackMachine(dbFixture.snackMachineId);
