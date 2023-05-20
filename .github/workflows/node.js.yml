@@ -20,7 +20,7 @@ jobs:
     - name: Install dependencies
       run: pnpm install
     - name: Lint
-      run: pnpm lint    
+      run: pnpm eslint    
     - name: Test
       run: pnpm test
     - name: Build
