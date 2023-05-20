@@ -1,6 +1,6 @@
 import { Snack } from "../../snack/snack";
-import { ValueObject } from "../../../../../shared/core/value-objects/value-object.abstract";
-import { Guard } from "../../../../../shared/core/utils/guard";
+import { ValueObject } from "../../../../../common/value-objects/value-object.abstract";
+import { Guard } from "../../../../../util/guard";
 
 export class SnackPile extends ValueObject<SnackPile> {
   static empty = new SnackPile(Snack.None, 0, 0);

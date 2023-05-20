@@ -2,7 +2,7 @@
 import { SnackMachineRepository } from "./snack-machine.repository";
 import { Snack } from "../model/aggregates/snack/snack";
 import { SnackPile } from "../model/aggregates/snack-machine/value-objects/snack-pile";
-import { Money } from "../model/aggregates/snack-machine/value-objects/money";
+import { Money } from "../../shared-kernel/value-objects/money";
 import { getSnackMachineRepositoryFixture } from "./snack-machine.repository.fixtures";
 
 describe(SnackMachineRepository.name, () => {

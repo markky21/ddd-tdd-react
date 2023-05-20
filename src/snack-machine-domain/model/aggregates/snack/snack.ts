@@ -1,5 +1,5 @@
-import { AggregateRoot } from "../../../../shared/core/aggregates/aggregate-root.abstract";
-import { EntityId } from "../../../../shared/core/entities/entity.abstract";
+import { AggregateRoot } from "../../../../common/aggregates/aggregate-root.abstract";
+import { EntityId } from "../../../../common/entities/entity.abstract";
 
 export class Snack extends AggregateRoot {
   static readonly None = new Snack("0", "None");

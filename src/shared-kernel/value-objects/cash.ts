@@ -1,7 +1,7 @@
-import { ValueObject } from "../../../../../shared/core/value-objects/value-object.abstract";
 import { Money } from "./money";
-import { Guard } from "../../../../../shared/core/utils/guard";
 import Fraction from "fraction.js";
+import { ValueObject } from "../../common/value-objects/value-object.abstract";
+import { Guard } from "../../util/guard";
 
 export class Cash extends ValueObject<Money> {
   static readonly None: Cash = new Cash(0);

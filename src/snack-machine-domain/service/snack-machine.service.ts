@@ -1,16 +1,16 @@
-import { Money } from "../model/aggregates/snack-machine/value-objects/money";
+import { Money } from "../../shared-kernel/value-objects/money";
 import { BehaviorSubject, map, ReplaySubject } from "rxjs";
 import { SnackMachineWithPersistence } from "../model/aggregates/snack-machine/snack-machine-with-persistence";
 import { SnackMachineSlotsPosition } from "../model/aggregates/snack-machine/entities/slot";
-import { Cash } from "../model/aggregates/snack-machine/value-objects/cash";
+import { Cash } from "../../shared-kernel/value-objects/cash";
 import { SnackMachineRepository } from "../repository/snack-machine.repository";
-import { EntityId } from "../../shared/core/entities/entity.abstract";
 import {
   SnackMachine,
   SnackMachineSlots,
 } from "../model/aggregates/snack-machine/snack-machine";
-import { Guard } from "../../shared/core/utils/guard";
 import { SlotService } from "./slot.service";
+import { EntityId } from "../../common/entities/entity.abstract";
+import { Guard } from "../../util/guard";
 
 export class SnackMachineService {
   readonly #moneyInserted$ = new ReplaySubject<Cash>();

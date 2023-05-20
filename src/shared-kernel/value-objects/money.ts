@@ -1,7 +1,7 @@
-import { ValueObject } from "../../../../../shared/core/value-objects/value-object.abstract";
-import { Guard } from "../../../../../shared/core/utils/guard";
 import Fraction from "fraction.js";
 import { Cash } from "./cash";
+import { ValueObject } from "../../common/value-objects/value-object.abstract";
+import { Guard } from "../../util/guard";
 
 export interface CoinsAndNotes {
   oneCentCount: number;
@@ -191,6 +191,7 @@ export class Money extends ValueObject<Money> {
     );
   }
 
+  // TODO: make static property for those methods
   static None(): Money {
     return new Money();
   }

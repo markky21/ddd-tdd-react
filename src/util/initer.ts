@@ -1,19 +1,19 @@
-import { SnackMachineService } from "./snack-machine-domain/service/snack-machine.service";
-import { IdbService } from "./snack-machine-domain/storage/idb.service";
-import { SnackMachineRepository } from "./snack-machine-domain/repository/snack-machine.repository";
-import { SnackRepository } from "./snack-machine-domain/repository/snack.repository";
-import { EntityId } from "./shared/core/entities/entity.abstract";
+import { SnackMachineService } from "../snack-machine-domain/service/snack-machine.service";
+import { IdbService } from "../shared-kernel/storage/idb.service";
+import { SnackMachineRepository } from "../snack-machine-domain/repository/snack-machine.repository";
+import { SnackRepository } from "../snack-machine-domain/repository/snack.repository";
 import { nanoid } from "nanoid";
-import { SnackMachineWithPersistence } from "./snack-machine-domain/model/aggregates/snack-machine/snack-machine-with-persistence";
-import { Snack } from "./snack-machine-domain/model/aggregates/snack/snack";
+import { SnackMachineWithPersistence } from "../snack-machine-domain/model/aggregates/snack-machine/snack-machine-with-persistence";
+import { Snack } from "../snack-machine-domain/model/aggregates/snack/snack";
 import {
   Slot,
   SnackMachineSlotsPosition,
-} from "./snack-machine-domain/model/aggregates/snack-machine/entities/slot";
-import { SnackPile } from "./snack-machine-domain/model/aggregates/snack-machine/value-objects/snack-pile";
-import { Money } from "./snack-machine-domain/model/aggregates/snack-machine/value-objects/money";
-import { SnackMachineMap } from "./snack-machine-domain/repository/mappers/snack-machine.map";
-import { SlotMap } from "./snack-machine-domain/repository/mappers/slot.map";
+} from "../snack-machine-domain/model/aggregates/snack-machine/entities/slot";
+import { SnackPile } from "../snack-machine-domain/model/aggregates/snack-machine/value-objects/snack-pile";
+import { Money } from "../shared-kernel/value-objects/money";
+import { SnackMachineMap } from "../snack-machine-domain/repository/mappers/snack-machine.map";
+import { SlotMap } from "../snack-machine-domain/repository/mappers/slot.map";
+import { EntityId } from "../common/entities/entity.abstract";
 
 interface IniterConfig {
   snackMachineId: EntityId;

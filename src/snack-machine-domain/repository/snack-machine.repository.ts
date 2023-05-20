@@ -1,11 +1,8 @@
-import { Repository } from "../../shared/repositories/repository.abstract";
 import { SnackMachine } from "../model/aggregates/snack-machine/snack-machine";
-import { IdbService } from "../storage/idb.service";
-import { Guard } from "../../shared/core/utils/guard";
+import { IdbService } from "../../shared-kernel/storage/idb.service";
 import { SnackMachineMap } from "./mappers/snack-machine.map";
 import { SnackRepository } from "./snack.repository";
-import { EntityId } from "../../shared/core/entities/entity.abstract";
-import { SlotFromDb } from "../storage/idb.model";
+import { SlotFromDb } from "../../shared-kernel/storage/idb.model";
 import {
   Slot,
   SnackMachineSlotsPosition,
@@ -15,6 +12,9 @@ import { SnackPile } from "../model/aggregates/snack-machine/value-objects/snack
 import { SnackMachineWithPersistence } from "../model/aggregates/snack-machine/snack-machine-with-persistence";
 import { SnackMap } from "./mappers/snack.map";
 import { Snack } from "../model/aggregates/snack/snack";
+import { EntityId } from "../../common/entities/entity.abstract";
+import { Repository } from "../../common/repositories/repository.abstract";
+import { Guard } from "../../util/guard";
 
 export class SnackMachineRepository extends Repository<SnackMachine> {
   private static instance: SnackMachineRepository;

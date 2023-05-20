@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { App } from "./app";
 import "./index.css";
-import { Initer } from "./initer";
+import { Initer } from "./util/initer";
 
 const SNACK_MACHINE_ID = "snack-machine-1";
 

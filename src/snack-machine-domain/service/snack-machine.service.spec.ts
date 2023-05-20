@@ -1,7 +1,7 @@
 import { SnackMachineService } from "./snack-machine.service";
-import { Money } from "../model/aggregates/snack-machine/value-objects/money";
+import { Money } from "../../shared-kernel/value-objects/money";
 import { getSnackMachineServiceFixture } from "./snack-machine.service.fixture";
-import { Cash } from "../model/aggregates/snack-machine/value-objects/cash";
+import { Cash } from "../../shared-kernel/value-objects/cash";
 import { describe } from "vitest";
 
 describe(SnackMachineService.name, () => {

@@ -1,6 +1,6 @@
 import { SnackMachine } from "../../model/aggregates/snack-machine/snack-machine";
-import { SnackMachineFromDb } from "../../storage/idb.model";
-import { Money } from "../../model/aggregates/snack-machine/value-objects/money";
+import { SnackMachineFromDb } from "../../../shared-kernel/storage/idb.model";
+import { Money } from "../../../shared-kernel/value-objects/money";
 import { SnackMachineWithPersistence } from "../../model/aggregates/snack-machine/snack-machine-with-persistence";
 
 export class SnackMachineMap {

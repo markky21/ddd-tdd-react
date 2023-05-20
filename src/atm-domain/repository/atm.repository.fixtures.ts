@@ -2,17 +2,17 @@ import {
   getTestDb,
   seedTestDb,
 } from "../../shared-kernel/storage/idb.service.fixture";
-import { SnackRepository } from "./snack.repository";
+import { AtmRepository } from "./atm.repository";
 
-export const getSnackRepositoryFixture = async () => {
+export const getAtmRepositoryFixture = async () => {
   const db = await getTestDb();
   const dbFixture = await seedTestDb(db);
 
-  const snackRepository = SnackRepository.getInstance();
+  const atmRepository = AtmRepository.getInstance();
 
   return {
     db,
-    snackRepository,
+    atmRepository,
     dbFixture,
   };
 };

@@ -1,4 +1,4 @@
-import { SlotFromDb } from "../../storage/idb.model";
+import { SlotFromDb } from "../../../shared-kernel/storage/idb.model";
 import { Slot } from "../../model/aggregates/snack-machine/entities/slot";
 
 export class SlotMap {

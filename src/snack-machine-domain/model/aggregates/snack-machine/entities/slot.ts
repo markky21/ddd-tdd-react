@@ -1,8 +1,8 @@
+import { SnackPile } from "../value-objects/snack-pile";
 import {
   Entity,
   EntityId,
-} from "../../../../../shared/core/entities/entity.abstract";
-import { SnackPile } from "../value-objects/snack-pile";
+} from "../../../../../common/entities/entity.abstract";
 
 export type SnackMachineSlotsPosition = 0 | 1 | 2;
 

@@ -1,5 +1,5 @@
 import { Slot } from "../model/aggregates/snack-machine/entities/slot";
-import { Cash } from "../model/aggregates/snack-machine/value-objects/cash";
+import { Cash } from "../../shared-kernel/value-objects/cash";
 
 export interface SlotView {
   position: number;

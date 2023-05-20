@@ -1,8 +1,8 @@
 import { SnackMachine } from "./snack-machine";
-import { Money } from "./value-objects/money";
+import { Money } from "../../../../shared-kernel/value-objects/money";
 import { Snack } from "../snack/snack";
 import { SnackPile } from "./value-objects/snack-pile";
-import { Cash } from "./value-objects/cash";
+import { Cash } from "../../../../shared-kernel/value-objects/cash";
 import { expect } from "vitest";
 
 describe(SnackMachine.name, () => {

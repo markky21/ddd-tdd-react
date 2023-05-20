@@ -1,8 +1,13 @@
 import { IdbService } from "./idb.service";
 import { nanoid } from "nanoid";
-import { SlotFromDb, SnackFromDb, SnackMachineFromDb } from "./idb.model";
-import { Snack } from "../model/aggregates/snack/snack";
-import { SnackMap } from "../repository/mappers/snack.map";
+import {
+  ATMFromDb,
+  SlotFromDb,
+  SnackFromDb,
+  SnackMachineFromDb,
+} from "./idb.model";
+import { Snack } from "../../snack-machine-domain/model/aggregates/snack/snack";
+import { SnackMap } from "../../snack-machine-domain/repository/mappers/snack.map";
 
 export async function getTestDb(): Promise<IdbService> {
   const db = IdbService.getInstance();
@@ -16,6 +21,7 @@ export const seedTestDb = async (db: IdbService) => {
   const slot1Id = nanoid();
   const slot2Id = nanoid();
   const snack0Id = Snack.Chocolate.id;
+  const atmId = nanoid();
 
   const snackMachineSeed: SnackMachineFromDb = {
     id: snackMachineId,
@@ -29,6 +35,20 @@ export const seedTestDb = async (db: IdbService) => {
     },
     slots: [slot0Id, slot1Id, slot2Id],
   };
+
+  const atmSeed: ATMFromDb = {
+    id: atmId,
+    moneyInMachine: {
+      oneCentCount: 0,
+      tenCentCount: 0,
+      quarterCentCount: 0,
+      oneDollarCount: 0,
+      fiveDollarCount: 0,
+      tenDollarCount: 0,
+    },
+    moneyCharged: 0,
+  };
+
   const slot0Seed: SlotFromDb = {
     id: slot0Id,
     quantity: 10,
@@ -60,6 +80,7 @@ export const seedTestDb = async (db: IdbService) => {
   await db.putSlotById(slot1Id, slot1Seed);
   await db.putSlotById(slot2Id, slot2Seed);
   await db.putSnackById(snack0Id, snack0Seed);
+  await db.putAtmById(atmId, atmSeed);
 
   const snackMachineFromDb = (await db.getSnackMachineById(
     snackMachineId
@@ -68,6 +89,7 @@ export const seedTestDb = async (db: IdbService) => {
   const slot1FromDb = await db.getSlotById(slot1Id);
   const slot2FromDb = await db.getSlotById(slot2Id);
   const snack0FromDb = await db.getSnackById(snack0Id);
+  const atmFromDb = await db.getAtmById(atmId);
 
   return {
     snackMachineId,
@@ -75,10 +97,12 @@ export const seedTestDb = async (db: IdbService) => {
     slot1Id,
     slot2Id,
     snack0Id,
+    atmId,
     snackMachineFromDb,
     slot0FromDb,
     slot1FromDb,
     slot2FromDb,
     snack0FromDb,
+    atmFromDb,
   };
 };

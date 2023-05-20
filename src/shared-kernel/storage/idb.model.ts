@@ -1,6 +1,5 @@
-import { CoinsAndNotes } from "../model/aggregates/snack-machine/value-objects/money";
-import { EntityId } from "../../shared/core/entities/entity.abstract";
-import { SnackMachineSlotsPosition } from "../model/aggregates/snack-machine/entities/slot";
+import { CoinsAndNotes } from "../value-objects/money";
+import { EntityId } from "../../common/entities/entity.abstract";
 
 export interface SnackMachineFromDb {
   moneyInMachine: CoinsAndNotes;
@@ -14,10 +13,16 @@ export interface SlotFromDb {
   price: number;
   snackMachineId: string;
   snackId: string | null;
-  position: SnackMachineSlotsPosition;
+  position: 0 | 1 | 2;
 }
 
 export interface SnackFromDb {
   id: EntityId;
   name: string;
+}
+
+export interface ATMFromDb {
+  id: EntityId;
+  moneyInMachine: CoinsAndNotes;
+  moneyCharged: number;
 }

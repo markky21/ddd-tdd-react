@@ -1,4 +1,4 @@
-import { SnackFromDb } from "../../storage/idb.model";
+import { SnackFromDb } from "../../../shared-kernel/storage/idb.model";
 import { Snack } from "../../model/aggregates/snack/snack";
 
 export class SnackMap {

@@ -1,9 +1,9 @@
 import { Initer } from "./initer";
-import { SnackMachineService } from "./snack-machine-domain/service/snack-machine.service";
+import { SnackMachineService } from "../snack-machine-domain/service/snack-machine.service";
 import {
   getTestDb,
   seedTestDb,
-} from "./snack-machine-domain/storage/idb.service.fixture";
+} from "../shared-kernel/storage/idb.service.fixture";
 
 describe(Initer.name, () => {
   it("should return controllers", async () => {

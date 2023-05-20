@@ -1,9 +1,9 @@
-import { Repository } from "../../shared/repositories/repository.abstract";
-import { IdbService } from "../storage/idb.service";
-import { Guard } from "../../shared/core/utils/guard";
+import { IdbService } from "../../shared-kernel/storage/idb.service";
 import { Snack } from "../model/aggregates/snack/snack";
 import { SnackMap } from "./mappers/snack.map";
-import { EntityId } from "../../shared/core/entities/entity.abstract";
+import { EntityId } from "../../common/entities/entity.abstract";
+import { Repository } from "../../common/repositories/repository.abstract";
+import { Guard } from "../../util/guard";
 
 export class SnackRepository extends Repository<Snack> {
   private static instance: SnackRepository;

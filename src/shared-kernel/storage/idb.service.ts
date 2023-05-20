@@ -1,8 +1,17 @@
 import { DBSchema, openDB } from "idb";
 import { IDBPDatabase } from "idb/build/entry";
-import { SlotFromDb, SnackMachineFromDb, SnackFromDb } from "./idb.model";
+import {
+  SlotFromDb,
+  SnackMachineFromDb,
+  SnackFromDb,
+  ATMFromDb,
+} from "./idb.model";
 
 interface MyDB extends DBSchema {
+  atm: {
+    value: ATMFromDb;
+    key: string;
+  };
   "snack-machine": {
     value: SnackMachineFromDb;
     key: string;
@@ -40,6 +49,9 @@ export class IdbService {
         db.createObjectStore("snack-machine", {
           autoIncrement: true,
         });
+        db.createObjectStore("atm", {
+          autoIncrement: true,
+        });
         db.createObjectStore("slot", {
           autoIncrement: true,
         });
@@ -68,6 +80,16 @@ export class IdbService {
   ): Promise<string> {
     const db = await this.getDb();
     return db.put("snack-machine", snackMachine, id);
+  }
+
+  async getAtmById(id: string): Promise<ATMFromDb | undefined> {
+    const db = await this.getDb();
+    return db.get("atm", id);
+  }
+
+  async putAtmById(id: string, atm: ATMFromDb): Promise<string> {
+    const db = await this.getDb();
+    return db.put("atm", atm, id);
   }
 
   async getSnackById(id: string): Promise<SnackFromDb | undefined> {

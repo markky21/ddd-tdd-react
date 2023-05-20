@@ -1,11 +1,11 @@
-import { Money } from "./value-objects/money";
-import { Guard } from "../../../../shared/core/utils/guard";
+import { Money } from "../../../../shared-kernel/value-objects/money";
 import { Slot, SnackMachineSlotsPosition } from "./entities/slot";
-import { AggregateRoot } from "../../../../shared/core/aggregates/aggregate-root.abstract";
 import { SnackPile } from "./value-objects/snack-pile";
-import { Cash } from "./value-objects/cash";
-import { EntityId } from "../../../../shared/core/entities/entity.abstract";
+import { Cash } from "../../../../shared-kernel/value-objects/cash";
 import { nanoid } from "nanoid";
+import { AggregateRoot } from "../../../../common/aggregates/aggregate-root.abstract";
+import { EntityId } from "../../../../common/entities/entity.abstract";
+import { Guard } from "../../../../util/guard";
 
 export type SnackMachineSlots = [Slot, Slot, Slot];
 export class SnackMachine extends AggregateRoot {
