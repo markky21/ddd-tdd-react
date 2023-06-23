@@ -123,15 +123,15 @@ describe(Money.name, () => {
 
   describe("toView", () => {
     [
-      { input: Money.None(), expected: "¢0" },
-      { input: Money.OneCent(), expected: "¢1" },
-      { input: Money.TenCent(), expected: "¢10" },
-      { input: Money.Quarter(), expected: "¢25" },
+      { input: Money.None(), expected: "$0.00" },
+      { input: Money.OneCent(), expected: "$0.01" },
+      { input: Money.TenCent(), expected: "$0.10" },
+      { input: Money.Quarter(), expected: "$0.25" },
       { input: Money.Dollar(), expected: "$1.00" },
       { input: Money.FiveDollar(), expected: "$5.00" },
       { input: Money.TenDollar(), expected: "$10.00" },
       { input: new Money(2, 2, 2, 2, 2, 2), expected: "$32.72" },
-      { input: new Money(2, 1), expected: "¢12" },
+      { input: new Money(2, 1), expected: "$0.12" },
     ].forEach(({ input, expected }) => {
       it("should return the amount in presentational form", () => {
         expect(input.toView()).toEqual(expected);

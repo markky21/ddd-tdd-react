@@ -19,6 +19,17 @@ test("take money exchange money with commission", () => {
   expect(atm.moneyCharged).toEqual(new Cash(1.01));
 });
 
+test("atm stores info about money charged", () => {
+  const { atm } = getSUT();
+  atm.loadMoney(Money.Quarter());
+  atm.loadMoney(Money.Dollar());
+
+  atm.takeMoney(new Cash(0.25));
+  atm.takeMoney(new Cash(1));
+
+  expect(atm.moneyCharged).toEqual(new Cash(1.27));
+});
+
 test("commission is 1% of amount", () => {
   const { atm } = getSUT();
   atm.loadMoney(Money.FiveDollar());

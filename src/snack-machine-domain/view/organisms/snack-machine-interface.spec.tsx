@@ -14,7 +14,7 @@ describe(SnackMachineInterface.name, () => {
     render(<SnackMachineInterface snackMachine={controller} />);
 
     expect(screen.getByTestId("insertedMoney")).toHaveTextContent(
-      "Money inserted: ¢0"
+      "Money inserted: $0.00"
     );
 
     fireEvent.click(screen.getByText("Put ¢1"));
@@ -46,7 +46,7 @@ describe(SnackMachineInterface.name, () => {
     );
 
     expect(screen.getByTestId("insertedMoney")).toHaveTextContent(
-      "Money inserted: ¢0"
+      "Money inserted: $0.00"
     );
   });
 
@@ -62,7 +62,7 @@ describe(SnackMachineInterface.name, () => {
     fireEvent.click(screen.getByText("Return money"));
     expect(screen.getByTestId("message")).toHaveTextContent("Money returned");
     expect(screen.getByTestId("insertedMoney")).toHaveTextContent(
-      "Money inserted: ¢0"
+      "Money inserted: $0.00"
     );
   });
 

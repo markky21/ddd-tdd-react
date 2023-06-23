@@ -3,10 +3,10 @@ import { Cash } from "./cash";
 describe(Cash.name, () => {
   describe("toView", () => {
     [
-      { input: 0, expected: "¢0" },
-      { input: 0.01, expected: "¢1" },
-      { input: 0.1, expected: "¢10" },
-      { input: 0.25, expected: "¢25" },
+      { input: 0, expected: "$0.00" },
+      { input: 0.01, expected: "$0.01" },
+      { input: 0.1, expected: "$0.10" },
+      { input: 0.25, expected: "$0.25" },
       { input: 1, expected: "$1.00" },
       { input: 5.25, expected: "$5.25" },
       { input: 5.5, expected: "$5.50" },

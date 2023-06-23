@@ -12,19 +12,10 @@ export class Cash extends ValueObject<Money> {
   }
 
   toView(): string {
-    if (this.amount === 0) {
-      return "¢0";
-    }
-    if (this.amount < 1) {
-      return `¢${this.amount * 100}`;
-    }
-    if (this.amount % 1 === 0) {
-      return `$${this.amount}.00`;
-    }
-    if ((this.amount * 10) % 1 === 0) {
-      return `$${this.amount}0`;
-    }
-    return `$${this.amount}`;
+    return this.amount.toLocaleString("en-US", {
+      currency: "USD",
+      style: "currency",
+    });
   }
 
   add(addend: Cash): Cash {

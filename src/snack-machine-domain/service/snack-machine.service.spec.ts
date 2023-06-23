@@ -13,7 +13,7 @@ describe(SnackMachineService.name, () => {
       const subscription = service.moneyInserted$.subscribe(spy);
       subscription.unsubscribe();
 
-      expect(spy).toHaveBeenNthCalledWith(1, "¢0");
+      expect(spy).toHaveBeenNthCalledWith(1, "$0.00");
     });
 
     it("should initially give information about inserted money in snack machine", async () => {
@@ -54,10 +54,10 @@ describe(SnackMachineService.name, () => {
       service.insertTenDollar();
       subscription.unsubscribe();
 
-      expect(spy).toHaveBeenNthCalledWith(1, "¢0");
-      expect(spy).toHaveBeenNthCalledWith(2, "¢1");
-      expect(spy).toHaveBeenNthCalledWith(3, "¢11");
-      expect(spy).toHaveBeenNthCalledWith(4, "¢36");
+      expect(spy).toHaveBeenNthCalledWith(1, "$0.00");
+      expect(spy).toHaveBeenNthCalledWith(2, "$0.01");
+      expect(spy).toHaveBeenNthCalledWith(3, "$0.11");
+      expect(spy).toHaveBeenNthCalledWith(4, "$0.36");
       expect(spy).toHaveBeenNthCalledWith(5, "$1.36");
       expect(spy).toHaveBeenNthCalledWith(6, "$6.36");
       expect(spy).toHaveBeenNthCalledWith(7, "$16.36");
@@ -76,9 +76,9 @@ describe(SnackMachineService.name, () => {
       service.insertTenDollar();
       subscription.unsubscribe();
 
-      expect(spy).toHaveBeenNthCalledWith(2, "You inserted ¢1");
-      expect(spy).toHaveBeenNthCalledWith(3, "You inserted ¢10");
-      expect(spy).toHaveBeenNthCalledWith(4, "You inserted ¢25");
+      expect(spy).toHaveBeenNthCalledWith(2, "You inserted $0.01");
+      expect(spy).toHaveBeenNthCalledWith(3, "You inserted $0.10");
+      expect(spy).toHaveBeenNthCalledWith(4, "You inserted $0.25");
       expect(spy).toHaveBeenNthCalledWith(5, "You inserted $1.00");
       expect(spy).toHaveBeenNthCalledWith(6, "You inserted $5.00");
       expect(spy).toHaveBeenNthCalledWith(7, "You inserted $10.00");
@@ -128,15 +128,15 @@ describe(SnackMachineService.name, () => {
       expect(spy.mock.calls[0]).toEqual([
         [
           { position: 0, price: "$1.00", quantity: 10, name: "Chocolate" },
-          { position: 1, price: "¢0", quantity: 0, name: "None" },
-          { position: 2, price: "¢0", quantity: 0, name: "None" },
+          { position: 1, price: "$0.00", quantity: 0, name: "None" },
+          { position: 2, price: "$0.00", quantity: 0, name: "None" },
         ],
       ]);
       expect(spy.mock.calls[1]).toEqual([
         [
           { position: 0, price: "$1.00", quantity: 9, name: "Chocolate" },
-          { position: 1, price: "¢0", quantity: 0, name: "None" },
-          { position: 2, price: "¢0", quantity: 0, name: "None" },
+          { position: 1, price: "$0.00", quantity: 0, name: "None" },
+          { position: 2, price: "$0.00", quantity: 0, name: "None" },
         ],
       ]);
     });
@@ -175,10 +175,10 @@ describe(SnackMachineService.name, () => {
       service.returnMoney();
       subscription.unsubscribe();
 
-      expect(spy).toHaveBeenNthCalledWith(1, "¢0");
-      expect(spy).toHaveBeenNthCalledWith(2, "¢1");
-      expect(spy).toHaveBeenNthCalledWith(3, "¢11");
-      expect(spy).toHaveBeenNthCalledWith(4, "¢0");
+      expect(spy).toHaveBeenNthCalledWith(1, "$0.00");
+      expect(spy).toHaveBeenNthCalledWith(2, "$0.01");
+      expect(spy).toHaveBeenNthCalledWith(3, "$0.11");
+      expect(spy).toHaveBeenNthCalledWith(4, "$0.00");
     });
 
     it("should to return message from snack machine", async () => {
@@ -229,7 +229,7 @@ describe(SnackMachineService.name, () => {
       subscription.unsubscribe();
 
       expect(spy).toHaveBeenNthCalledWith(2, "$1.00");
-      expect(spy).toHaveBeenNthCalledWith(3, "¢0");
+      expect(spy).toHaveBeenNthCalledWith(3, "$0.00");
     });
 
     it("should to return message from snack machine", async () => {

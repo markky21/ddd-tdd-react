@@ -1,8 +1,8 @@
-import { Button } from "../atoms/button";
-import { Card } from "../atoms/card";
+import { Button } from "../../../common/view/atoms/button";
+import { Card } from "../../../common/view/atoms/card";
 import { useObservableState } from "observable-hooks";
 import { SnackMachineService } from "../../service/snack-machine.service";
-import { Snacks } from "../molecule/snacks";
+import { Snacks } from "../molecules/snacks";
 
 interface SnackMachineInterfaceProps {
   snackMachine: SnackMachineService;
@@ -18,6 +18,8 @@ export function SnackMachineInterface({
 
   return (
     <Card className="max-w-xl">
+      <h2 className="text-2xl p-4">Snack Machine</h2>
+      <hr className="mb-4" />
       <div className="flex flex-col justify-center gap-6">
         <div className="flex gap-4">
           <Snacks slots={slots} />

@@ -45,7 +45,9 @@ export class Atm extends AggregateRoot {
     const amountWithCommission = new Fraction(cash.amount)
       .add(commission)
       .valueOf();
-    this.moneyCharged = new Cash(amountWithCommission);
+    this.moneyCharged = new Cash(this.moneyCharged.amount).add(
+      new Cash(amountWithCommission)
+    );
   }
 
   private calculateCommission(cash: Cash): number {
