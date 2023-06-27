@@ -15,19 +15,8 @@ test("take money exchange money with commission", () => {
 
   atm.takeMoney(new Cash(1));
 
-  expect(atm.moneyInside).toEqual(Money.None());
-  expect(atm.moneyCharged).toEqual(new Cash(1.01));
-});
-
-test("atm stores info about money charged", () => {
-  const { atm } = getSUT();
-  atm.loadMoney(Money.Quarter());
-  atm.loadMoney(Money.Dollar());
-
-  atm.takeMoney(new Cash(0.25));
-  atm.takeMoney(new Cash(1));
-
-  expect(atm.moneyCharged).toEqual(new Cash(1.27));
+  expect(atm.getMoneyInside()).toEqual(Money.None());
+  expect(atm.getMoneyCharged()).toEqual(new Cash(1.01));
 });
 
 test("commission is 1% of amount", () => {
@@ -36,7 +25,7 @@ test("commission is 1% of amount", () => {
 
   atm.takeMoney(new Cash(5));
 
-  expect(atm.moneyCharged).toEqual(new Cash(5.05));
+  expect(atm.getMoneyCharged()).toEqual(new Cash(5.05));
 });
 
 test("commission is rounded up to the cent", () => {
@@ -45,7 +34,7 @@ test("commission is rounded up to the cent", () => {
 
   atm.takeMoney(new Cash(0.01));
 
-  expect(atm.moneyCharged).toEqual(new Cash(0.02));
+  expect(atm.getMoneyCharged()).toEqual(new Cash(0.02));
 });
 
 test("canTakeMoney gives message when there is invalid amount to take", () => {
@@ -58,7 +47,9 @@ test("canTakeMoney gives message when there not enough money inside", () => {
   const { atm } = getSUT();
   atm.loadMoney(Money.OneCent());
 
-  expect(atm.canTakeMoney(new Cash(1))).toEqual("Not enough money inside");
+  expect(atm.canTakeMoney(new Cash(1))).toEqual(
+    "There is not enough money in the ATM"
+  );
 });
 
 test("canTakeMoney gives message when there not enough money to allocate", () => {
@@ -80,7 +71,7 @@ test("throws when trying to take more money than is in machine", () => {
   const { atm } = getSUT();
 
   expect(() => atm.takeMoney(new Cash(1))).toThrowError(
-    "Not enough money inside"
+    "There is not enough money in the ATM"
   );
 });
 

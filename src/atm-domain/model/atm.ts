@@ -10,10 +10,18 @@ export class Atm extends AggregateRoot {
 
   constructor(
     public readonly id: EntityId,
-    public moneyInside: Money = Money.None(),
-    public moneyCharged: Cash = Cash.None
+    private moneyInside: Money = Money.None(),
+    private moneyCharged: Cash = Cash.None
   ) {
     super(id);
+  }
+
+  getMoneyInside(): Money {
+    return this.moneyInside;
+  }
+
+  getMoneyCharged(): Cash {
+    return this.moneyCharged;
   }
 
   canTakeMoney(cash: Cash): string | true {
@@ -21,7 +29,7 @@ export class Atm extends AggregateRoot {
       return "Invalid amount to take";
     }
     if (this.moneyInside.getTotalAmount() < cash.amount) {
-      return "Not enough money inside";
+      return "There is not enough money in the ATM";
     }
 
     if (!this.moneyInside.canAllocate(cash)) {
@@ -42,11 +50,8 @@ export class Atm extends AggregateRoot {
     this.moneyInside = this.moneyInside.subtraction(allocated);
 
     const commission = this.calculateCommission(cash);
-    const amountWithCommission = new Fraction(cash.amount)
-      .add(commission)
-      .valueOf();
-    this.moneyCharged = new Cash(this.moneyCharged.amount).add(
-      new Cash(amountWithCommission)
+    this.moneyCharged = new Cash(
+      new Fraction(cash.amount).add(commission).valueOf()
     );
   }
 

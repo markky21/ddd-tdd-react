@@ -15,8 +15,8 @@ export class AtmMap {
   public static toPersistence(atm: Atm): ATMFromDb {
     return {
       id: atm.id,
-      moneyInMachine: atm.moneyInside.getCoinsAndNotes(),
-      moneyCharged: atm.moneyCharged.amount,
+      moneyInMachine: atm.getMoneyInside().getCoinsAndNotes(),
+      moneyCharged: atm.getMoneyCharged().amount,
     };
   }
 }

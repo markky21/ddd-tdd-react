@@ -39,12 +39,12 @@ export const seedTestDb = async (db: IdbService) => {
   const atmSeed: ATMFromDb = {
     id: atmId,
     moneyInMachine: {
-      oneCentCount: 0,
-      tenCentCount: 0,
-      quarterCentCount: 0,
-      oneDollarCount: 0,
-      fiveDollarCount: 0,
-      tenDollarCount: 0,
+      oneCentCount: 100,
+      tenCentCount: 100,
+      quarterCentCount: 100,
+      oneDollarCount: 100,
+      fiveDollarCount: 100,
+      tenDollarCount: 100,
     },
     moneyCharged: 0,
   };
