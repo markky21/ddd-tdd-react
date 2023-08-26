@@ -36,6 +36,10 @@ export class AtmService {
     return;
   }
 
+  public get atmId(): EntityId | null {
+    return this.#atmId;
+  }
+
   takeMoney(money: Cash): void {
     this.guardIsAtm();
     if (!AtmService.assertAtmIsInitialized(this.#atm)) {

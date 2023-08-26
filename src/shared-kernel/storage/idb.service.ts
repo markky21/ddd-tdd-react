@@ -5,6 +5,7 @@ import {
   SnackMachineFromDb,
   SnackFromDb,
   ATMFromDb,
+  HeadOfficeFromDb,
 } from "./idb.model";
 
 interface MyDB extends DBSchema {
@@ -24,6 +25,10 @@ interface MyDB extends DBSchema {
     value: SnackFromDb;
     key: string;
   };
+  "head-office": {
+    value: HeadOfficeFromDb;
+    key: string;
+  };
 }
 
 export class IdbService {
@@ -32,7 +37,7 @@ export class IdbService {
   private db: IDBPDatabase<MyDB> = {} as IDBPDatabase<MyDB>;
 
   private constructor(
-    private dbName: string = "ddd-snack-machine",
+    private dbName: string = "ddd-practice",
     private version: number = 1
   ) {}
 
@@ -56,6 +61,9 @@ export class IdbService {
           autoIncrement: true,
         });
         db.createObjectStore("snack", {
+          autoIncrement: true,
+        });
+        db.createObjectStore("head-office", {
           autoIncrement: true,
         });
       },
@@ -110,5 +118,18 @@ export class IdbService {
   async putSlotById(id: string, slot: SlotFromDb): Promise<string> {
     const db = await this.getDb();
     return db.put("slot", slot, id);
+  }
+
+  async getHeadOfficeById(id: string): Promise<HeadOfficeFromDb | undefined> {
+    const db = await this.getDb();
+    return db.get("head-office", id);
+  }
+
+  async putHeadOfficeById(
+    id: string,
+    headOffice: HeadOfficeFromDb
+  ): Promise<string> {
+    const db = await this.getDb();
+    return db.put("head-office", headOffice, id);
   }
 }

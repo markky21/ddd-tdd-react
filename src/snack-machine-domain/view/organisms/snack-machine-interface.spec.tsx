@@ -11,7 +11,7 @@ const getController = async (): Promise<SnackMachineService> => {
 describe(SnackMachineInterface.name, () => {
   it("user can insert money", async () => {
     const controller = await getController();
-    render(<SnackMachineInterface snackMachine={controller} />);
+    render(<SnackMachineInterface snackMachineService={controller} />);
 
     expect(screen.getByTestId("insertedMoney")).toHaveTextContent(
       "Money inserted: $0.00"
@@ -31,7 +31,7 @@ describe(SnackMachineInterface.name, () => {
 
   it("user can buy a snack", async () => {
     const controller = await getController();
-    render(<SnackMachineInterface snackMachine={controller} />);
+    render(<SnackMachineInterface snackMachineService={controller} />);
 
     fireEvent.click(screen.getByText("Put $10"));
     expect(screen.getByTestId("message")).toHaveTextContent(
@@ -52,7 +52,7 @@ describe(SnackMachineInterface.name, () => {
 
   it("user can return money", async () => {
     const controller = await getController();
-    render(<SnackMachineInterface snackMachine={controller} />);
+    render(<SnackMachineInterface snackMachineService={controller} />);
 
     fireEvent.click(screen.getByText("Put $10"));
     expect(screen.getByTestId("message")).toHaveTextContent(
@@ -68,7 +68,7 @@ describe(SnackMachineInterface.name, () => {
 
   it("user should see messages", async () => {
     const controller = await getController();
-    render(<SnackMachineInterface snackMachine={controller} />);
+    render(<SnackMachineInterface snackMachineService={controller} />);
 
     fireEvent.click(screen.getByText("Put $10"));
     expect(screen.getByTestId("message")).toHaveTextContent(
@@ -78,7 +78,7 @@ describe(SnackMachineInterface.name, () => {
 
   it("user should see coins and notes", async () => {
     const controller = await getController();
-    render(<SnackMachineInterface snackMachine={controller} />);
+    render(<SnackMachineInterface snackMachineService={controller} />);
 
     await waitFor(() =>
       expect(screen.getByTestId("moneyInside")).toHaveTextContent(

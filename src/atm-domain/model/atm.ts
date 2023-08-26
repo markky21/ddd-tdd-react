@@ -4,6 +4,7 @@ import Fraction from "fraction.js";
 import { Guard } from "../../util/guard";
 import { AggregateRoot } from "../../common/aggregates/aggregate-root.abstract";
 import { EntityId } from "../../common/entities/entity.abstract";
+// import { BalanceChangedEvent } from "../events/balance-changed-event";
 
 export class Atm extends AggregateRoot {
   private readonly commissionRate = 0.01;
@@ -50,9 +51,12 @@ export class Atm extends AggregateRoot {
     this.moneyInside = this.moneyInside.subtraction(allocated);
 
     const commission = this.calculateCommission(cash);
-    this.moneyCharged = new Cash(
+    const moneyCharged = new Cash(
       new Fraction(cash.amount).add(commission).valueOf()
     );
+    this.moneyCharged = moneyCharged;
+
+    // const ev = new BalanceChangedEvent(moneyCharged);
   }
 
   private calculateCommission(cash: Cash): number {

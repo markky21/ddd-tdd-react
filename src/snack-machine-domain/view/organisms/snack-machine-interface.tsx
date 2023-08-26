@@ -5,16 +5,25 @@ import { SnackMachineService } from "../../service/snack-machine.service";
 import { Snacks } from "../molecules/snacks";
 
 interface SnackMachineInterfaceProps {
-  snackMachine: SnackMachineService;
+  snackMachineService: SnackMachineService;
 }
 export function SnackMachineInterface({
-  snackMachine,
+  snackMachineService,
 }: SnackMachineInterfaceProps) {
-  const moneyInserted = useObservableState(snackMachine.moneyInserted$, "");
-  const message = useObservableState(snackMachine.message$, "");
-  const coinsAndNotes = useObservableState(snackMachine.coinsAndNotes$, null);
-  const moneyInMachine = useObservableState(snackMachine.moneyInMachine$, null);
-  const slots = useObservableState(snackMachine.snacks$, []);
+  const moneyInserted = useObservableState(
+    snackMachineService.moneyInserted$,
+    ""
+  );
+  const message = useObservableState(snackMachineService.message$, "");
+  const coinsAndNotes = useObservableState(
+    snackMachineService.coinsAndNotes$,
+    null
+  );
+  const moneyInMachine = useObservableState(
+    snackMachineService.moneyInMachine$,
+    null
+  );
+  const slots = useObservableState(snackMachineService.snacks$, []);
 
   return (
     <Card className="max-w-xl">
@@ -27,21 +36,21 @@ export function SnackMachineInterface({
           <div>
             <Button
               className="w-full"
-              onClick={() => snackMachine.buySnack(0)}
+              onClick={() => snackMachineService.buySnack(0)}
               data-testid="buttonBuySnack0"
             >
               Buy a snack 1
             </Button>
             <Button
               className="w-full"
-              onClick={() => snackMachine.buySnack(1)}
+              onClick={() => snackMachineService.buySnack(1)}
               data-testid="buttonBuySnack1"
             >
               Buy a snack 2
             </Button>
             <Button
               className="w-full"
-              onClick={() => snackMachine.buySnack(2)}
+              onClick={() => snackMachineService.buySnack(2)}
               data-testid="buttonBuySnack2"
             >
               Buy a snack 3
@@ -54,14 +63,22 @@ export function SnackMachineInterface({
         </h3>
 
         <div className="grid grid-cols-3 gap-3" data-testid="insertMoney">
-          <Button onClick={() => snackMachine.insertOneCent()}>Put ¢1</Button>
-          <Button onClick={() => snackMachine.insertTenCent()}>Put ¢10</Button>
-          <Button onClick={() => snackMachine.insertQuarter()}>Put ¢25</Button>
-          <Button onClick={() => snackMachine.insertDollar()}>Put $1</Button>
-          <Button onClick={() => snackMachine.insertFiveDollar()}>
+          <Button onClick={() => snackMachineService.insertOneCent()}>
+            Put ¢1
+          </Button>
+          <Button onClick={() => snackMachineService.insertTenCent()}>
+            Put ¢10
+          </Button>
+          <Button onClick={() => snackMachineService.insertQuarter()}>
+            Put ¢25
+          </Button>
+          <Button onClick={() => snackMachineService.insertDollar()}>
+            Put $1
+          </Button>
+          <Button onClick={() => snackMachineService.insertFiveDollar()}>
             Put $5
           </Button>
-          <Button onClick={() => snackMachine.insertTenDollar()}>
+          <Button onClick={() => snackMachineService.insertTenDollar()}>
             Put $10
           </Button>
         </div>
@@ -69,7 +86,7 @@ export function SnackMachineInterface({
         <div>
           <Button
             className="w-full"
-            onClick={() => snackMachine.returnMoney()}
+            onClick={() => snackMachineService.returnMoney()}
             data-testid="buttonReturnMoney"
           >
             Return money

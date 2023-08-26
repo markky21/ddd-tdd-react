@@ -6,16 +6,18 @@ import { SnackMachineInterface } from "./snack-machine-domain/view/organisms/sna
 import { Atm } from "./atm-domain/view/organisms/atm";
 
 const SNACK_MACHINE_ID = "snack-machine-1";
+const ATM_ID = "atm-1";
 
-Initer.init({ snackMachineId: SNACK_MACHINE_ID }).then(
-  (snackMachineController) => {
-    ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-      <React.StrictMode>
-        <main className="p-4">
-          <SnackMachineInterface snackMachine={snackMachineController} />
-          <Atm />
-        </main>
-      </React.StrictMode>
-    );
-  }
-);
+Initer.init({
+  atmId: ATM_ID,
+  snackMachineId: SNACK_MACHINE_ID,
+}).then(({ snackMachineService, atmService }) => {
+  ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+    <React.StrictMode>
+      <main className="p-4">
+        <SnackMachineInterface snackMachineService={snackMachineService} />
+        <Atm atmService={atmService} />
+      </main>
+    </React.StrictMode>
+  );
+});

@@ -14,28 +14,58 @@ import { Money } from "../shared-kernel/value-objects/money";
 import { SnackMachineMap } from "../snack-machine-domain/repository/mappers/snack-machine.map";
 import { SlotMap } from "../snack-machine-domain/repository/mappers/slot.map";
 import { EntityId } from "../common/entities/entity.abstract";
+import { AtmWithPersistence } from "../atm-domain/model/atm-with-persistence";
+import { AtmMap } from "../atm-domain/repository/mappers/atm.map";
+import { AtmService } from "../atm-domain/service/atm.service";
+import { AtmRepository } from "../atm-domain/repository/atm.repository";
+import { HeadOfficeWithPersistence } from "../head-office-domain/model/head-office-with-persistence";
+import { HeadOfficeMap } from "../head-office-domain/repository/mappers/head-office.map";
+import { HeadOfficeService } from "../head-office-domain/service/head-office.service";
+import { HeadOfficeInstance } from "../head-office-domain/repository/head-office-instance";
 
 interface IniterConfig {
   snackMachineId: EntityId;
+  atmId: EntityId;
   createIfNotExists?: boolean;
 }
 export class Initer {
   private static db = IdbService.getInstance();
   private static snackRepository = SnackRepository.getInstance();
   private static snackMachineRepository = SnackMachineRepository.getInstance();
+  private static atmRepository = AtmRepository.getInstance();
 
-  static async init({
-    snackMachineId,
-  }: IniterConfig): Promise<SnackMachineService> {
+  static async init({ snackMachineId, atmId }: IniterConfig): Promise<{
+    snackMachineService: SnackMachineService;
+    atmService: AtmService;
+    headOfficeService: HeadOfficeService;
+  }> {
     await this.db.initialize();
 
     if (!(await this.db.getSnackMachineById(snackMachineId))) {
       await Initer.createSnackMachine(snackMachineId);
     }
 
-    const controller = new SnackMachineService(this.snackMachineRepository);
-    await controller.initializeSnackMachine(snackMachineId);
-    return controller;
+    if (!(await this.db.getAtmById(atmId))) {
+      await Initer.createAtm(atmId);
+    }
+
+    await HeadOfficeInstance.getInstance().catch(() => {
+      return Initer.createHeadOffice();
+    });
+
+    const snackMachineService = new SnackMachineService(
+      this.snackMachineRepository
+    );
+    await snackMachineService.initializeSnackMachine(snackMachineId);
+
+    const atmService = new AtmService(this.atmRepository);
+    await atmService.initializeAtm(atmId);
+
+    const headOffice = await HeadOfficeInstance.getInstance();
+    const headOfficeService = new HeadOfficeService(headOffice);
+    await headOfficeService.initialize();
+
+    return { snackMachineService, atmService, headOfficeService };
   }
 
   private static async createSnackMachine(snackMachineId: EntityId) {
@@ -68,5 +98,23 @@ export class Initer {
     await this.db.putSlotById(slot0.id, SlotMap.toPersistence(slot0));
     await this.db.putSlotById(slot1.id, SlotMap.toPersistence(slot1));
     await this.db.putSlotById(slot2.id, SlotMap.toPersistence(slot2));
+  }
+
+  private static async createAtm(atmId: EntityId) {
+    const atmToSave = new AtmWithPersistence(atmId);
+    atmToSave.loadMoney(new Money(100, 100, 100, 100, 100, 100));
+
+    await this.db.putAtmById(atmId, AtmMap.toPersistence(atmToSave));
+  }
+
+  private static async createHeadOffice() {
+    const headOfficeId = await HeadOfficeInstance.ID;
+    const headOfficeToSave = new HeadOfficeWithPersistence(headOfficeId);
+    headOfficeToSave.addMoney(new Money(100, 100, 100, 100, 100, 100));
+
+    await this.db.putHeadOfficeById(
+      headOfficeId,
+      HeadOfficeMap.toPersistence(headOfficeToSave)
+    );
   }
 }

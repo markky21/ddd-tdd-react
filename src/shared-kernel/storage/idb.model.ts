@@ -21,6 +21,12 @@ export interface SnackFromDb {
   name: string;
 }
 
+export interface HeadOfficeFromDb {
+  id: EntityId;
+  balance: number;
+  money: CoinsAndNotes;
+}
+
 export interface ATMFromDb {
   id: EntityId;
   moneyInMachine: CoinsAndNotes;

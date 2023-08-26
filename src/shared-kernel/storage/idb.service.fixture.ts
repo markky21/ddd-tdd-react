@@ -2,6 +2,7 @@ import { IdbService } from "./idb.service";
 import { nanoid } from "nanoid";
 import {
   ATMFromDb,
+  HeadOfficeFromDb,
   SlotFromDb,
   SnackFromDb,
   SnackMachineFromDb,
@@ -22,6 +23,7 @@ export const seedTestDb = async (db: IdbService) => {
   const slot2Id = nanoid();
   const snack0Id = Snack.Chocolate.id;
   const atmId = nanoid();
+  const headOfficeId = "headOfficeId-1";
 
   const snackMachineSeed: SnackMachineFromDb = {
     id: snackMachineId,
@@ -75,12 +77,26 @@ export const seedTestDb = async (db: IdbService) => {
   };
   const snack0Seed: SnackFromDb = SnackMap.toPersistence(Snack.Chocolate);
 
+  const headOfficeSeed: HeadOfficeFromDb = {
+    id: headOfficeId,
+    money: {
+      oneCentCount: 1000,
+      tenCentCount: 1000,
+      quarterCentCount: 1000,
+      oneDollarCount: 1000,
+      fiveDollarCount: 1000,
+      tenDollarCount: 1000,
+    },
+    balance: 5000,
+  };
+
   await db.putSnackMachineById(snackMachineId, snackMachineSeed);
   await db.putSlotById(slot0Id, slot0Seed);
   await db.putSlotById(slot1Id, slot1Seed);
   await db.putSlotById(slot2Id, slot2Seed);
   await db.putSnackById(snack0Id, snack0Seed);
   await db.putAtmById(atmId, atmSeed);
+  await db.putHeadOfficeById(headOfficeId, headOfficeSeed);
 
   const snackMachineFromDb = (await db.getSnackMachineById(
     snackMachineId
@@ -90,6 +106,7 @@ export const seedTestDb = async (db: IdbService) => {
   const slot2FromDb = await db.getSlotById(slot2Id);
   const snack0FromDb = await db.getSnackById(snack0Id);
   const atmFromDb = await db.getAtmById(atmId);
+  const headOfficeFromDb = await db.getHeadOfficeById(headOfficeId);
 
   return {
     snackMachineId,
@@ -104,5 +121,7 @@ export const seedTestDb = async (db: IdbService) => {
     slot2FromDb,
     snack0FromDb,
     atmFromDb,
+    headOfficeId,
+    headOfficeFromDb,
   };
 };
