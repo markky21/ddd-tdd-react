@@ -40,7 +40,7 @@ export class AtmService {
     return this.#atmId;
   }
 
-  takeMoney(money: Cash): void {
+  async takeMoney(money: Cash): Promise<void> {
     this.guardIsAtm();
     if (!AtmService.assertAtmIsInitialized(this.#atm)) {
       return;
@@ -54,6 +54,13 @@ export class AtmService {
 
     const atm = this.#atm!;
     atm.takeMoney(money);
+
+    try {
+      await this.atmRepository.saveOrUpdate(atm);
+    } catch {
+      this.#message$.next("Error while saving atm");
+      return;
+    }
     this.#moneyCharged$.next(atm.getMoneyCharged());
     this.#moneyInside$.next(atm.getMoneyInside());
     this.#message$.next(

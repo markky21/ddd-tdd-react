@@ -15,6 +15,7 @@ import { Snack } from "../model/aggregates/snack/snack";
 import { EntityId } from "../../common/entities/entity.abstract";
 import { Repository } from "../../common/repositories/repository.abstract";
 import { Guard } from "../../util/guard";
+import { SnackMachineDto } from "../dto/snack-machine.dto";
 
 export class SnackMachineRepository extends Repository<SnackMachine> {
   private static instance: SnackMachineRepository;
@@ -46,6 +47,7 @@ export class SnackMachineRepository extends Repository<SnackMachine> {
     return snackMachine;
   }
 
+  // TODO test what happened when snack put fails
   async saveOrUpdate(
     aggregateRoot: SnackMachineWithPersistence
   ): Promise<EntityId> {
@@ -62,10 +64,17 @@ export class SnackMachineRepository extends Repository<SnackMachine> {
     }
 
     const snackMachineToDb = SnackMachineMap.toPersistence(aggregateRoot);
-    return await this.db.putSnackMachineById(
-      aggregateRoot.id,
-      snackMachineToDb
-    );
+    return this.db
+      .putSnackMachineById(aggregateRoot.id, snackMachineToDb)
+      .then((id) => {
+        this.onPostSaveOrUpdate(aggregateRoot);
+        return id;
+      });
+  }
+
+  async getAll(): Promise<SnackMachineDto[]> {
+    const snackMachinesFromDb = await this.db.getAllSnackMachines();
+    return snackMachinesFromDb.map(SnackMachineMap.toDto);
   }
 
   private async getSlotWithSnack(slotId: EntityId): Promise<Slot> {

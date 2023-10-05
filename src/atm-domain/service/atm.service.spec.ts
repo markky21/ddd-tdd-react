@@ -2,6 +2,8 @@ import { AtmService } from "./atm.service";
 import { getAtmServiceFixture } from "./atm.service.fixture";
 import { Cash } from "../../shared-kernel/value-objects/cash";
 import { Money } from "../../shared-kernel/value-objects/money";
+import { vitest } from "vitest";
+import { IdbService } from "../../shared-kernel/storage/idb.service";
 
 describe(AtmService.name, () => {
   describe("initialize state", () => {
@@ -39,7 +41,7 @@ describe(AtmService.name, () => {
       const { service } = await getAtmServiceFixture();
       const subscription = service.moneyCharged$.subscribe(spy);
 
-      service.takeMoney(new Cash(105.25));
+      await service.takeMoney(new Cash(105.25));
       subscription.unsubscribe();
 
       expect(spy).toHaveBeenNthCalledWith(2, "$106.31");
@@ -50,7 +52,7 @@ describe(AtmService.name, () => {
       const { service } = await getAtmServiceFixture();
       const subscription = service.message$.subscribe(spy);
 
-      service.takeMoney(new Cash(1));
+      await service.takeMoney(new Cash(1));
       subscription.unsubscribe();
 
       expect(spy).toHaveBeenNthCalledWith(1, "You have been charged $1.01");
@@ -61,7 +63,7 @@ describe(AtmService.name, () => {
       const { service } = await getAtmServiceFixture();
       const subscription = service.moneyInside$.subscribe(spy);
 
-      service.takeMoney(new Cash(105.25));
+      await service.takeMoney(new Cash(105.25));
       subscription.unsubscribe();
 
       expect(spy).toHaveBeenNthCalledWith(
@@ -75,13 +77,27 @@ describe(AtmService.name, () => {
       const { service } = await getAtmServiceFixture();
       const subscription = service.message$.subscribe(spy);
 
-      service.takeMoney(new Cash(10_000));
+      await service.takeMoney(new Cash(10_000));
       subscription.unsubscribe();
 
       expect(spy).toHaveBeenNthCalledWith(
         1,
         "There is not enough money in the ATM"
       );
+    });
+
+    it("should to return message if atm could not save request", async () => {
+      const spy = vi.fn();
+      const { service } = await getAtmServiceFixture();
+      const subscription = service.message$.subscribe(spy);
+      vitest
+        .spyOn(IdbService.getInstance(), "putAtmById")
+        .mockRejectedValue(new Error("test error"));
+
+      await service.takeMoney(new Cash(1));
+      subscription.unsubscribe();
+
+      expect(spy).toBeCalledWith("Error while saving atm");
     });
   });
 });

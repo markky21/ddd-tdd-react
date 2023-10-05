@@ -3,6 +3,7 @@ import { Atm } from "./atm";
 import { Cash } from "../../shared-kernel/value-objects/cash";
 import { expect } from "vitest";
 import { nanoid } from "nanoid";
+import { BalanceChangedEvent } from "../events/balance-changed.event";
 
 const getSUT = () => {
   const atm = new Atm(nanoid());
@@ -82,4 +83,16 @@ test("throws when trying to take money and can't allocate", () => {
   expect(() => atm.takeMoney(new Cash(0.5))).toThrowError(
     "Not enough money to allocate"
   );
+});
+
+test('take money add "BalanceChangedEvent" event to the aggregate events list', () => {
+  const { atm } = getSUT();
+  atm.loadMoney(new Money(100));
+  // let event: BalanceChangedEvent | undefined;
+
+  atm.takeMoney(new Cash(0.5));
+
+  const balanceChangedEvent = atm.getDomainEvents()[0] as BalanceChangedEvent;
+  expect(balanceChangedEvent).toBeDefined();
+  expect(balanceChangedEvent.delta).toEqual(new Cash(0.51));
 });

@@ -29,9 +29,14 @@ export class HeadOfficeRepository extends Repository<HeadOffice> {
   }
 
   async saveOrUpdate(aggregateRoot: HeadOffice): Promise<EntityId> {
-    return this.db.putHeadOfficeById(
-      aggregateRoot.id,
-      HeadOfficeMap.toPersistence(aggregateRoot)
-    );
+    return this.db
+      .putHeadOfficeById(
+        aggregateRoot.id,
+        HeadOfficeMap.toPersistence(aggregateRoot)
+      )
+      .then((id) => {
+        this.onPostSaveOrUpdate(aggregateRoot);
+        return id;
+      });
   }
 }

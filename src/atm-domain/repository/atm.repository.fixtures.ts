@@ -9,10 +9,12 @@ export const getAtmRepositoryFixture = async () => {
   const dbFixture = await seedTestDb(db);
 
   const atmRepository = AtmRepository.getInstance();
+  const atm = await atmRepository.getById(dbFixture.atmId);
 
   return {
     db,
     atmRepository,
     dbFixture,
+    atm,
   };
 };

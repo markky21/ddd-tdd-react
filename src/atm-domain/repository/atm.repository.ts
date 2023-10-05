@@ -5,6 +5,7 @@ import { IdbService } from "../../shared-kernel/storage/idb.service";
 import { Atm } from "../model/atm";
 import { AtmMap } from "./mappers/atm.map";
 import { ATMFromDb } from "../../shared-kernel/storage/idb.model";
+import { AtmDto } from "../dto/atm.dto";
 
 export class AtmRepository extends Repository<Atm> {
   private static instance: AtmRepository;
@@ -27,9 +28,16 @@ export class AtmRepository extends Repository<Atm> {
   }
 
   async saveOrUpdate(aggregateRoot: Atm): Promise<EntityId> {
-    return this.db.putAtmById(
-      aggregateRoot.id,
-      AtmMap.toPersistence(aggregateRoot)
-    );
+    return this.db
+      .putAtmById(aggregateRoot.id, AtmMap.toPersistence(aggregateRoot))
+      .then((id) => {
+        this.onPostSaveOrUpdate(aggregateRoot);
+        return id;
+      });
+  }
+
+  async getAll(): Promise<AtmDto[]> {
+    const atmsFromDb = await this.db.getAllAtms();
+    return atmsFromDb.map(AtmMap.toDto);
   }
 }

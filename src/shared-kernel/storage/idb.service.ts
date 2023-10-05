@@ -90,6 +90,11 @@ export class IdbService {
     return db.put("snack-machine", snackMachine, id);
   }
 
+  async getAllSnackMachines(): Promise<SnackMachineFromDb[]> {
+    const db = await this.getDb();
+    return db.getAll("snack-machine");
+  }
+
   async getAtmById(id: string): Promise<ATMFromDb | undefined> {
     const db = await this.getDb();
     return db.get("atm", id);
@@ -98,6 +103,11 @@ export class IdbService {
   async putAtmById(id: string, atm: ATMFromDb): Promise<string> {
     const db = await this.getDb();
     return db.put("atm", atm, id);
+  }
+
+  async getAllAtms(): Promise<ATMFromDb[]> {
+    const db = await this.getDb();
+    return db.getAll("atm");
   }
 
   async getSnackById(id: string): Promise<SnackFromDb | undefined> {

@@ -4,6 +4,8 @@ import Fraction from "fraction.js";
 import { Guard } from "../../util/guard";
 import { AggregateRoot } from "../../common/aggregates/aggregate-root.abstract";
 import { EntityId } from "../../common/entities/entity.abstract";
+import { BalanceChangedEvent } from "../events/balance-changed.event";
+
 // import { BalanceChangedEvent } from "../events/balance-changed-event";
 
 export class Atm extends AggregateRoot {
@@ -56,7 +58,7 @@ export class Atm extends AggregateRoot {
     );
     this.moneyCharged = moneyCharged;
 
-    // const ev = new BalanceChangedEvent(moneyCharged);
+    this.addDomainEvent(new BalanceChangedEvent(moneyCharged));
   }
 
   private calculateCommission(cash: Cash): number {

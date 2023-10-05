@@ -6,6 +6,7 @@ import { nanoid } from "nanoid";
 import { AggregateRoot } from "../../../../common/aggregates/aggregate-root.abstract";
 import { EntityId } from "../../../../common/entities/entity.abstract";
 import { Guard } from "../../../../util/guard";
+import { MoneyInMachineChangedEvent } from "../../../events/money-in-machine-changed.event";
 
 export type SnackMachineSlots = [Slot, Slot, Slot];
 export class SnackMachine extends AggregateRoot {
@@ -105,6 +106,9 @@ export class SnackMachine extends AggregateRoot {
     );
     this.finalizeTransaction(cashToReturn);
     this.slots[position].snackPile = snackPile.decreaseQuantity();
+    this.addDomainEvent(
+      new MoneyInMachineChangedEvent(this.moneyInMachine.getCoinsAndNotes())
+    );
   }
 
   private finalizeTransaction(cash: Cash): void {

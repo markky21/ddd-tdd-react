@@ -9,10 +9,12 @@ export const getHeadOfficeRepositoryFixture = async () => {
   const dbFixture = await seedTestDb(db);
 
   const headOfficeRepository = HeadOfficeRepository.getInstance();
+  const headOffice = await headOfficeRepository.getById(dbFixture.headOfficeId);
 
   return {
     db,
     headOfficeRepository,
     dbFixture,
+    headOffice,
   };
 };

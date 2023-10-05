@@ -2,6 +2,7 @@ import { SnackMachine } from "../../model/aggregates/snack-machine/snack-machine
 import { SnackMachineFromDb } from "../../../shared-kernel/storage/idb.model";
 import { Money } from "../../../shared-kernel/value-objects/money";
 import { SnackMachineWithPersistence } from "../../model/aggregates/snack-machine/snack-machine-with-persistence";
+import { SnackMachineDto } from "../../dto/snack-machine.dto";
 
 export class SnackMachineMap {
   public static toDomain(
@@ -21,5 +22,9 @@ export class SnackMachineMap {
       moneyInMachine: snackMachine.getMoneyInMachine().getCoinsAndNotes(),
       slots: snackMachine.getSlotsIds(),
     };
+  }
+
+  public static toDto(snackMachine: SnackMachineFromDb): SnackMachineDto {
+    return new SnackMachineDto(snackMachine.id, snackMachine.moneyInMachine);
   }
 }

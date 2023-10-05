@@ -6,10 +6,12 @@ import { HeadOfficeInstance } from "../repository/head-office-instance";
 export class BalanceChangedEventHandler
   implements IEventHandler<BalanceChangedEvent>
 {
+  readonly eventClassName = BalanceChangedEvent.name;
+
   async handle(domainEvent: BalanceChangedEvent): Promise<void> {
-    const repository = HeadOfficeRepository.getInstance();
+    const headOfficeRepository = HeadOfficeRepository.getInstance();
     const headOffice = await HeadOfficeInstance.getInstance();
     headOffice.changeBalance(domainEvent.delta);
-    await repository.saveOrUpdate(headOffice);
+    await headOfficeRepository.saveOrUpdate(headOffice);
   }
 }

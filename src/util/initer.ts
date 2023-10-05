@@ -22,6 +22,8 @@ import { HeadOfficeWithPersistence } from "../head-office-domain/model/head-offi
 import { HeadOfficeMap } from "../head-office-domain/repository/mappers/head-office.map";
 import { HeadOfficeService } from "../head-office-domain/service/head-office.service";
 import { HeadOfficeInstance } from "../head-office-domain/repository/head-office-instance";
+import { DomainEvents } from "../common/events/domain-events";
+import { BalanceChangedEventHandler } from "../head-office-domain/evant-handlers/balance-changed.event-handler";
 
 interface IniterConfig {
   snackMachineId: EntityId;
@@ -63,9 +65,15 @@ export class Initer {
 
     const headOffice = await HeadOfficeInstance.getInstance();
     const headOfficeService = new HeadOfficeService(headOffice);
-    await headOfficeService.initialize();
+
+    this.registerEventHandlers();
 
     return { snackMachineService, atmService, headOfficeService };
+  }
+
+  // TODO: test register event handlers
+  private static registerEventHandlers() {
+    DomainEvents.register(new BalanceChangedEventHandler());
   }
 
   private static async createSnackMachine(snackMachineId: EntityId) {

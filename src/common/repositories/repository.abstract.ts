@@ -1,5 +1,6 @@
 import { AggregateRoot } from "../aggregates/aggregate-root.abstract";
 import { EntityId } from "../entities/entity.abstract";
+import { EventListener } from "../../util/event-listener";
 
 export class Repository<T extends AggregateRoot> {
   getById(id: string): Promise<T> {
@@ -8,5 +9,9 @@ export class Repository<T extends AggregateRoot> {
 
   saveOrUpdate(aggregateRoot: T): Promise<EntityId> {
     throw new Error("Method not implemented.");
+  }
+
+  onPostSaveOrUpdate(aggregateRoot: T): void {
+    EventListener.getInstance().onPostPut(aggregateRoot);
   }
 }
