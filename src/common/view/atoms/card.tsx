@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import { twMerge } from "tailwind-merge";
 
 interface CardProps {
   children: React.ReactNode;
@@ -7,7 +7,10 @@ interface CardProps {
 export const Card = ({ children, className }: CardProps) => {
   return (
     <section
-      className={classNames("rounded overflow-hidden shadow-lg p-4", className)}
+      className={twMerge(
+        "bg-white rounded-lg overflow-hidden shadow-lg p-4",
+        className
+      )}
     >
       {children}
     </section>

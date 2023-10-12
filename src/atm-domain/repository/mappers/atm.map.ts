@@ -22,6 +22,9 @@ export class AtmMap {
   }
 
   public static toDto(atmFromDb: ATMFromDb): AtmDto {
-    return new AtmDto(atmFromDb.id, atmFromDb.moneyCharged);
+    return new AtmDto(
+      atmFromDb.id,
+      Money.FromCoinsAndNotes(atmFromDb.moneyInMachine).toView()
+    );
   }
 }

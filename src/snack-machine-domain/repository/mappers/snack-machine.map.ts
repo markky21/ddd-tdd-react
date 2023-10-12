@@ -25,6 +25,7 @@ export class SnackMachineMap {
   }
 
   public static toDto(snackMachine: SnackMachineFromDb): SnackMachineDto {
-    return new SnackMachineDto(snackMachine.id, snackMachine.moneyInMachine);
+    const money = Money.FromCoinsAndNotes(snackMachine.moneyInMachine);
+    return new SnackMachineDto(snackMachine.id, money.toView());
   }
 }

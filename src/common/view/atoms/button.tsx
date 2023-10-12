@@ -1,4 +1,4 @@
-import classnames from "classnames";
+import { twMerge } from "tailwind-merge";
 
 interface ButtonProps {
   children: React.ReactNode;
@@ -19,8 +19,9 @@ export const Button = ({
       type={type}
       disabled={disabled}
       onClick={onClick}
-      className={classnames(
+      className={twMerge(
         "bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded",
+        disabled && "opacity-50 cursor-not-allowed",
         className
       )}
     >

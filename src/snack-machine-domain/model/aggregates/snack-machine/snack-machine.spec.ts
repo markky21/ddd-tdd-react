@@ -3,12 +3,21 @@ import { Money } from "../../../../shared-kernel/value-objects/money";
 import { Snack } from "../snack/snack";
 import { SnackPile } from "./value-objects/snack-pile";
 import { Cash } from "../../../../shared-kernel/value-objects/cash";
-import { expect } from "vitest";
+import { describe, expect } from "vitest";
+
+const getSUT = () => {
+  const snackMachine = new SnackMachine("1");
+  snackMachine.loadMoney(new Money(5, 5, 5, 5, 5, 5));
+  snackMachine.loadSnacks(0, new SnackPile(Snack.Chocolate, 1, 10));
+  snackMachine.loadSnacks(1, new SnackPile(Snack.Soda, 1, 10));
+  snackMachine.loadSnacks(2, new SnackPile(Snack.Gum, 1, 10));
+  return snackMachine;
+};
 
 describe(SnackMachine.name, () => {
   describe("insertMoney", () => {
     it("should be able to insert money to the machine", () => {
-      const snackMachine = new SnackMachine("1");
+      const snackMachine = getSUT();
       snackMachine.insertMoney(Money.OneCent());
       snackMachine.insertMoney(Money.TenCent());
       snackMachine.insertMoney(Money.Dollar());
@@ -17,7 +26,7 @@ describe(SnackMachine.name, () => {
     });
 
     it("should NOT be able to insert more than one coins at a time", () => {
-      const snackMachine = new SnackMachine("1");
+      const snackMachine = getSUT();
 
       expect(() => snackMachine.insertMoney(new Money(2))).toThrowError(
         "Cannot insert more than one coin at a time"
@@ -25,8 +34,7 @@ describe(SnackMachine.name, () => {
     });
 
     it("should be able to return money", () => {
-      const snackMachine = new SnackMachine("1");
-      snackMachine.loadMoney(new Money(5, 5, 5, 5, 5, 5));
+      const snackMachine = getSUT();
 
       snackMachine.insertMoney(Money.OneCent());
       snackMachine.insertMoney(Money.TenCent());
@@ -138,6 +146,37 @@ describe(SnackMachine.name, () => {
       expect(snackMachine.canBuySnack(0)).toEqual(
         "Not enough money to allocate"
       );
+    });
+  });
+
+  describe("withdrawal of money", () => {
+    it("should be able to withdraw money", () => {
+      const snackMachine = getSUT();
+
+      snackMachine.withdrawMoney(new Money(4, 4, 4, 4, 4, 4));
+
+      expect(snackMachine.getMoneyInMachine()).toEqual(
+        new Money(1, 1, 1, 1, 1, 1)
+      );
+    });
+
+    it("should NOT be able to withdraw money if there is not enough notes and coins in the machine", () => {
+      const snackMachine = getSUT();
+
+      expect(() => snackMachine.withdrawMoney(new Money(6))).toThrowError(
+        "One cent count is negative"
+      );
+    });
+
+    it("should NOT rise an event when withdrawn failed", () => {
+      const snackMachine = getSUT();
+      const toWithDrawn = new Money(6);
+
+      try {
+        snackMachine.withdrawMoney(toWithDrawn);
+      } catch {}
+
+      expect(snackMachine.getDomainEvents().length).toEqual(0);
     });
   });
 });

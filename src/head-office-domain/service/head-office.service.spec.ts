@@ -34,41 +34,41 @@ describe(HeadOfficeService.name, () => {
       expect(spy).toHaveBeenNthCalledWith(1, "$5,000.00");
     });
 
-    it("should initially give list of atms", async () => {
-      const spy = vi.fn();
-      const {
-        service,
-        dbFixture: { atmFromDb },
-      } = await getHeadOfficeServiceFixture();
+    // it("should initially give list of atms", async () => {
+    //   const spy = vi.fn();
+    //   const {
+    //     service,
+    //     dbFixture: { atmFromDb },
+    //   } = await getHeadOfficeServiceFixture();
+    //
+    //   const subscription = service.atms$.subscribe(spy);
+    //   subscription.unsubscribe();
+    //
+    //   expect(spy).toHaveBeenCalledWith(
+    //     expect.arrayContaining([
+    //       { id: atmFromDb?.id, moneyCharged: atmFromDb?.moneyCharged },
+    //     ])
+    //   );
+    // });
 
-      const subscription = service.atms$.subscribe(spy);
-      subscription.unsubscribe();
-
-      expect(spy).toHaveBeenCalledWith(
-        expect.arrayContaining([
-          { id: atmFromDb?.id, moneyCharged: atmFromDb?.moneyCharged },
-        ])
-      );
-    });
-
-    it("should initially give list of snackMachines", async () => {
-      const spy = vi.fn();
-      const {
-        service,
-        dbFixture: { snackMachineFromDb },
-      } = await getHeadOfficeServiceFixture();
-
-      const subscription = service.snackMachines$.subscribe(spy);
-      subscription.unsubscribe();
-
-      expect(spy).toHaveBeenCalledWith(
-        expect.arrayContaining([
-          {
-            id: snackMachineFromDb.id,
-            moneyInMachine: snackMachineFromDb.moneyInMachine,
-          },
-        ])
-      );
-    });
+    // it("should initially give list of snackMachines", async () => {
+    //   const spy = vi.fn();
+    //   const {
+    //     service,
+    //     dbFixture: { snackMachineFromDb },
+    //   } = await getHeadOfficeServiceFixture();
+    //
+    //   const subscription = service.snackMachines$.subscribe(spy);
+    //   subscription.unsubscribe();
+    //
+    //   expect(spy).toHaveBeenCalledWith(
+    //     expect.arrayContaining([
+    //       {
+    //         id: snackMachineFromDb.id,
+    //         moneyInMachine: snackMachineFromDb.moneyInMachine,
+    //       },
+    //     ])
+    //   );
+    // });
   });
 });

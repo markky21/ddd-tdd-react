@@ -83,7 +83,7 @@ describe(SnackMachineRepository.name, () => {
       snackMachines.find(({ id }) => id === dbFixture.snackMachineFromDb?.id)
     ).toEqual({
       id: dbFixture.snackMachineFromDb?.id,
-      moneyInMachine: dbFixture.snackMachineFromDb?.moneyInMachine,
+      moneyInMachine: "$163.60",
     });
   });
 });

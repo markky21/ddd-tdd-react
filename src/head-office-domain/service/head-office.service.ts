@@ -4,8 +4,6 @@ import { Cash } from "../../shared-kernel/value-objects/cash";
 import { HeadOffice } from "../model/head-office";
 import { AtmDto } from "../../atm-domain/dto/atm.dto";
 import { AtmRepository } from "../../atm-domain/repository/atm.repository";
-import { SnackMachineRepository } from "../../snack-machine-domain/repository/snack-machine.repository";
-import { SnackMachineDto } from "../../snack-machine-domain/dto/snack-machine.dto";
 
 export class HeadOfficeService {
   public readonly id: string;
@@ -13,7 +11,6 @@ export class HeadOfficeService {
   readonly #balance$ = new ReplaySubject<Cash>();
   readonly #message$ = new Subject<string>();
   readonly #atms$ = new ReplaySubject<AtmDto[]>();
-  readonly #snackMachines$ = new ReplaySubject<SnackMachineDto[]>();
   public readonly message$ = this.#message$.asObservable();
 
   constructor(private readonly headOffice: HeadOffice) {
@@ -25,7 +22,6 @@ export class HeadOfficeService {
     this.#money$.next(headOffice.getMoney());
     this.#balance$.next(headOffice.getBalance());
     await this.updateAtms();
-    await this.updateSnackMachines();
     return;
   }
 
@@ -41,19 +37,9 @@ export class HeadOfficeService {
     return this.#atms$.asObservable();
   }
 
-  public get snackMachines$(): Observable<SnackMachineDto[]> {
-    return this.#snackMachines$.asObservable();
-  }
-
   private async updateAtms(): Promise<void> {
     const atmRepository = AtmRepository.getInstance();
     const atms = await atmRepository.getAll();
     this.#atms$.next(atms);
-  }
-
-  private async updateSnackMachines(): Promise<void> {
-    const snackMachineRepository = SnackMachineRepository.getInstance();
-    const snackMachineDtos = await snackMachineRepository.getAll();
-    this.#snackMachines$.next(snackMachineDtos);
   }
 }

@@ -7,6 +7,7 @@ import { AggregateRoot } from "../../../../common/aggregates/aggregate-root.abst
 import { EntityId } from "../../../../common/entities/entity.abstract";
 import { Guard } from "../../../../util/guard";
 import { MoneyInMachineChangedEvent } from "../../../events/money-in-machine-changed.event";
+import { MoneyWithdrawnEvent } from "../../../events/money-withdrawn.event";
 
 export type SnackMachineSlots = [Slot, Slot, Slot];
 export class SnackMachine extends AggregateRoot {
@@ -97,6 +98,11 @@ export class SnackMachine extends AggregateRoot {
 
   loadMoney(money: Money): void {
     this.moneyInMachine = this.moneyInMachine.add(money);
+  }
+
+  withdrawMoney(money: Money): void {
+    this.moneyInMachine = this.moneyInMachine.subtraction(money);
+    this.addDomainEvent(new MoneyWithdrawnEvent(money.getCoinsAndNotes()));
   }
 
   private buySnackCore(position: SnackMachineSlotsPosition): void {

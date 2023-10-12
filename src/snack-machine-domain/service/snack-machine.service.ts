@@ -88,7 +88,7 @@ export class SnackMachineService {
       this.message$.next(canBuySnack);
       return;
     }
-    await this.#snackMachine.buySnack(position);
+    this.#snackMachine.buySnack(position);
     await this.snackMachineRepository.saveOrUpdate(this.#snackMachine);
     this.#moneyInserted$.next(this.#snackMachine.getMoneyInTransaction());
     this.#moneyInMachine$.next(this.#snackMachine.getMoneyInMachine());

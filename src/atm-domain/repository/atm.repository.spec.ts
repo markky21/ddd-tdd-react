@@ -61,7 +61,7 @@ describe(AtmRepository.name, () => {
 
     expect(atms.find(({ id }) => id === dbFixture.atmFromDb?.id)).toEqual({
       id: dbFixture.atmFromDb?.id,
-      moneyCharged: dbFixture.atmFromDb?.moneyCharged,
+      moneyInside: "$1,636.00",
     });
   });
 });
